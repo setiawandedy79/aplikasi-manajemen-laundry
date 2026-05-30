@@ -1,0 +1,8 @@
+user : admin
+password : password
+
+user : kasir01
+password : password
+
+user : operator01
+password : password
