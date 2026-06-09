@@ -112,6 +112,18 @@ $route['supplier/edit/(:num)'] = 'supplier/edit/$1';
 $route['supplier/update/(:num)'] = 'supplier/update/$1';
 $route['supplier/delete/(:num)'] = 'supplier/delete/$1';
 
+//Pengambilan
+//$route['laporan/pengambilan_linen'] = 'laporan/pengambilan_linen';
+//$route['laporan/print_pengambilan_linen'] = 'laporan/print_pengambilan_linen';
+
+// Pengembalian
+$route['laporan/pengembalian_linen'] = 'laporan/pengembalian_linen';
+$route['laporan/print_pengembalian_linen'] = 'laporan/print_pengembalian_linen';
+
+// application/config/routes.php
+$route['laporan/rekapitulasi_pencucian'] = 'laporan/rekapitulasi_pencucian';
+$route['laporan/print_rekapitulasi_pencucian'] = 'laporan/print_rekapitulasi_pencucian';
+
 // $route['default_controller'] = 'welcome';
 // $route['404_override'] = '';
 // $route['translate_uri_dashes'] = FALSE;

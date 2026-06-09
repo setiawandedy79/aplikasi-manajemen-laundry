@@ -50,13 +50,13 @@
         <?php endif; ?>
         <?php if (is_allowed('mutasi')): ?>
         <a href="<?= base_url('mutasi') ?>" class="<?= $this->uri->segment(1) == 'mutasi' ? 'active' : '' ?>">
-            <i class="fas fa-truck-loading"></i> Mutasi Masuk Sabun
+            <i class="fas fa-truck-loading"></i> Mutasi Masuk Chemical
         </a>
         
         <?php endif; ?>
         <?php if (is_allowed('pemakaian')): ?>
         <a href="<?= base_url('pemakaian') ?>" class="<?= $this->uri->segment(1) == 'pemakaian' ? 'active' : '' ?>">
-            <i class="fas fa-clock"></i> Pemakaian Sabun
+            <i class="fas fa-clock"></i> Pemakaian Chemical
         </a>
         
         <?php endif; ?>
@@ -70,6 +70,41 @@
         <?php if (is_allowed('laporan')): ?>
         <a href="<?= base_url('laporan') ?>" class="<?= strpos($this->uri->uri_string(), 'laporan') !== false ? 'active' : '' ?>">
             <i class="fas fa-file-invoice"></i> Menu Laporan
+        </a>
+        <?php endif; ?>
+
+        <!-- ✅ TAMBAHKAN MENU BARU INI -->
+        <!-- <?php if (is_allowed('laporan')): ?>
+        <a href="<?= base_url('laporan/pengambilan_linen') ?>" class="<?= $this->uri->segment(2) == 'pengambilan_linen' ? 'active' : '' ?>">
+            <i class="fas fa-tshirt"></i> Laporan Pengambilan Linen
+        </a>
+        <?php endif; ?> -->
+
+
+        <!-- ✅ MENU BARU: LAPORAN PENGEMBALIAN LINEN -->
+        <!-- <?php if (is_allowed('laporan')): ?>
+        <a href="<?= base_url('laporan/pengembalian_linen') ?>" class="<?= $this->uri->segment(2) == 'pengembalian_linen' ? 'active' : '' ?>">
+            <i class="fas fa-undo"></i> Laporan Pengembalian Linen
+        </a>
+        <?php endif; ?> -->
+
+        <!-- ✅ MENU BARU: REKAPITULASI PENCUCIAN -->
+        <!-- <?php if (is_allowed('laporan')): ?>
+        <a href="<?= base_url('laporan/rekapitulasi_pencucian') ?>" class="<?= $this->uri->segment(2) == 'rekapitulasi_pencucian' ? 'active' : '' ?>">
+            <i class="fas fa-chart-line"></i> Rekapitulasi Pencucian Linen
+        </a>
+        <?php endif; ?> -->
+        <!-- ✅ MENU BARU: LAPORAN PENGGUNAAN CHEMICAL -->
+        <!-- <?php if (is_allowed('laporan')): ?>
+        <a href="<?= base_url('laporan/penggunaan_chemical') ?>" class="<?= $this->uri->segment(2) == 'penggunaan_chemical' ? 'active' : '' ?>">
+            <i class="fas fa-flask"></i> Laporan Penggunaan Chemical
+        </a>
+        <?php endif; ?> -->
+
+        <!-- ✅ MENU BARU: REKAPITULASI CHEMICAL -->
+        <?php if (is_allowed('laporan')): ?>
+        <a href="<?= base_url('laporan/rekapitulasi_chemical') ?>" class="<?= $this->uri->segment(2) == 'rekapitulasi_chemical' ? 'active' : '' ?>">
+            <i class="fas fa-chart-bar"></i> Rekapitulasi Chemical
         </a>
         <?php endif; ?>
 

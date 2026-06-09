@@ -1,6 +1,6 @@
 <div class="main-content">
     <div class="topbar">
-        <h5><i class="fas fa-truck-loading me-2"></i> Laporan Mutasi Masuk Sabun</h5>
+        <h5><i class="fas fa-truck-loading me-2"></i> Laporan Mutasi Masuk Chemical</h5>
     </div>
     <div class="content-area">
         <div class="card">
@@ -23,7 +23,7 @@
                 </form>
             </div>
             <div class="card-body">
-                <h6 class="text-center mb-3">LAPORAN REKAPITULASI MUTASI MASUK SABUN</h6>
+                <h6 class="text-center mb-3">LAPORAN REKAPITULASI MUTASI MASUK CHEMICAL</h6>
                 <p class="text-center text-muted small">Periode: <?= date('d/m/Y', strtotime($dari)) ?> s/d <?= date('d/m/Y', strtotime($sampai)) ?></p>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
@@ -31,7 +31,7 @@
                             <tr>
                                 <th class="text-center" width="50">No</th>
                                 <th class="text-center" width="50">Tanggal</th>
-                                <th class="text-center" width="250">Nama Sabun</th>
+                                <th class="text-center" width="250">Nama Chemical</th>
                                 <th class="text-center" width="50">Jumlah</th>
                                 <th class="text-center" width="50">Satuan</th>
                                 <th class="text-center" width="50">Keterangan</th>

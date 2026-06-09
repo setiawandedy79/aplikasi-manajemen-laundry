@@ -1,6 +1,6 @@
 <div class="main-content">
     <div class="topbar">
-        <h5><i class="fas fa-clock me-2"></i> Laporan Pemakaian Sabun Per Shift</h5>
+        <h5><i class="fas fa-clock me-2"></i> Laporan Pemakaian Chemical Per Shift</h5>
     </div>
     <div class="content-area">
         <div class="card">
@@ -23,7 +23,7 @@
                 </form>
             </div>
             <div class="card-body">
-                <h6 class="text-center mb-3">LAPORAN PEMAKAIAN SABUN PER SHIFT</h6>
+                <h6 class="text-center mb-3">LAPORAN PEMAKAIAN CHEMICAL PER SHIFT</h6>
                 <p class="text-center text-muted small">Periode: <?= date('d/m/Y', strtotime($dari)) ?> s/d <?= date('d/m/Y', strtotime($sampai)) ?></p>
                 
                 <?php 
@@ -47,7 +47,7 @@
                             <tr>
                                 <th class="text-center" width="50">No</th>
                                 <th class="text-center" width="100">Tanggal</th>
-                                <th class="text-center">Nama Sabun</th>
+                                <th class="text-center">Nama Chemical</th>
                                 <th class="text-center" width="80">Jumlah</th>
                                 <th class="text-center" width="80">Satuan</th>
                                 <th class="text-center" width="80">Shift</th>

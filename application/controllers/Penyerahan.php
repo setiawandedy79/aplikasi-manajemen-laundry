@@ -60,4 +60,35 @@ class Penyerahan extends MY_Controller {
         $this->session->set_flashdata('success', 'Data penyerahan berhasil disimpan');
         redirect('penyerahan');
     }
+
+    public function rincian($id) {
+        $data['title'] = 'Rincian Penyerahan Linen';
+        $data['header'] = $this->Transaksi_model->get_header_by_id($id);
+        
+        if (!$data['header']) {
+            $this->session->set_flashdata('error', 'Data transaksi tidak ditemukan');
+            redirect('penyerahan');
+        }
+        
+        // Ambil detail linen khusus untuk penyerahan
+        $data['detail'] = $this->Transaksi_model->get_detail_for_penyerahan($id);
+        
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar');
+        $this->load->view('penyerahan/rincian', $data);
+        $this->load->view('templates/footer');
+    }
+    
+    public function print_rincian($id) {
+        $data['header'] = $this->Transaksi_model->get_header_by_id($id);
+        
+        if (!$data['header']) {
+            redirect('penyerahan');
+        }
+        
+        $data['detail'] = $this->Transaksi_model->get_detail_for_penyerahan($id);
+        
+        // Load view print tanpa header & footer sidebar
+        $this->load->view('penyerahan/print_rincian', $data);
+    }
 }

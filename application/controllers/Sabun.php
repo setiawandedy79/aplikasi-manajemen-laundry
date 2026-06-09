@@ -40,6 +40,7 @@ class Sabun extends MY_Controller {
         $data['title'] = 'Edit Sabun';
         $data['row'] = $this->Sabun_model->get_by_id($id);
         $data['satuan'] = $this->Satuan_model->get_all();
+        $data['supplier'] = $this->Supplier_model->get_all();
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar');
         $this->load->view('sabun/form', $data);

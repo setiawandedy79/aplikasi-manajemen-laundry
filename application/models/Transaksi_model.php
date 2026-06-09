@@ -165,20 +165,39 @@ class Transaksi_model extends CI_Model {
         return $this->db->get('transaksi_header')->result();
     }
 
-        public function get_list_penyerahan() {
-        $this->db->select('transaksi_header.*, pelanggan.nama as nama_pelanggan');
-        $this->db->from('transaksi_header');
-        $this->db->join('pelanggan', 'pelanggan.id = transaksi_header.pelanggan_id', 'left');
-        
-        // ✅ FIX: Ganti NULL dengan string kosong '' agar aman di PHP 8.1
-        $this->db->order_by("FIELD(transaksi_header.status_serah, 'belum', 'diserahkan') ASC", '', FALSE);
-        
-        $this->db->order_by('transaksi_header.tanggal', 'DESC');
-        return $this->db->get()->result();
-    }
+    public function get_list_penyerahan() {
+            $this->db->select('
+                transaksi_header.*, 
+                pelanggan.nama as nama_pelanggan,
+                SUM(transaksi_detail.jumlah) as total_jumlah_awal,
+                SUM(transaksi_detail.jumlah_diserahkan) as total_jumlah_diserahkan
+            ');
+            $this->db->from('transaksi_header');
+            $this->db->join('pelanggan', 'pelanggan.id = transaksi_header.pelanggan_id', 'left');
+            $this->db->join('transaksi_detail', 'transaksi_detail.transaksi_id = transaksi_header.id', 'left');
+            
+            // Urutkan: yang belum diserahkan di atas, lalu berdasarkan tanggal terbaru
+            $this->db->order_by("FIELD(transaksi_header.status_serah, 'belum', 'diserahkan') ASC", '', FALSE);
+            $this->db->order_by('transaksi_header.tanggal', 'DESC');
+            
+            // WAJIB: Group by header id agar fungsi SUM() tidak error
+            $this->db->group_by('transaksi_header.id'); 
+            
+            return $this->db->get()->result();
+        }
 
     public function get_detail_for_penyerahan($transaksi_id) {
-        $this->db->select('transaksi_detail.id as detail_id, transaksi_detail.*, pakaian.nama_pakaian, pakaian.kategori');
+        // Sebutkan kolom secara eksplisit agar tidak tertukar
+        $this->db->select('
+            transaksi_detail.id as detail_id,
+            transaksi_detail.pakaian_id,
+            transaksi_detail.ceklis,
+            transaksi_detail.jumlah,
+            transaksi_detail.jumlah_diserahkan,
+            transaksi_detail.keterangan,
+            pakaian.nama_pakaian,
+            pakaian.kategori
+        ');
         $this->db->from('transaksi_detail');
         $this->db->join('pakaian', 'pakaian.id = transaksi_detail.pakaian_id', 'left');
         $this->db->where('transaksi_detail.transaksi_id', $transaksi_id);

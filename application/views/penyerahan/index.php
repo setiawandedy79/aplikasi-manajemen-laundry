@@ -25,6 +25,8 @@
                                 <th class="text-center">Tanggal</th>
                                 <th class="text-center">Pengirim</th>
                                 <th class="text-center">Penerima</th>
+                                <th class="text-center" width="100">Jumlah Awal</th>
+                                <th class="text-center" width="130">Jumlah Diserahkan</th>
                                 <th class="text-center">Status Serah</th>
                                 <th class="text-center" width="120">Aksi</th>
                             </tr>
@@ -37,6 +39,8 @@
                                 <td><?= date('d/m/Y', strtotime($row->tanggal)) ?></td>
                                 <td><?= $row->nama_pengirim ?></td>
                                 <td><?= $row->nama_penerima ?></td>
+                                <td class="text-center fw-bold"><?= isset($row->total_jumlah_awal) ? $row->total_jumlah_awal : 0 ?></td>
+                                <td class="text-center fw-bold text-primary"><?= isset($row->total_jumlah_diserahkan) ? $row->total_jumlah_diserahkan : 0 ?></td>
                                 <td>
                                     <?php if ($row->status_serah == 'diserahkan'): ?>
                                         <span class="badge bg-success"><i class="fas fa-check me-1"></i>Diserahkan</span>
@@ -51,8 +55,8 @@
                                             <i class="fas fa-hand-holding me-1"></i> Serahkan
                                         </a>
                                     <?php else: ?>
-                                        <a href="<?= base_url('transaksi/detail/'.$row->id) ?>" class="btn btn-secondary btn-sm">
-                                            <i class="fas fa-eye me-1"></i> Lihat
+                                        <a href="<?= base_url('penyerahan/rincian/'.$row->id) ?>" class="btn btn-info btn-sm text-white">
+                                            <i class="fas fa-list-alt me-1"></i> Rincian Linen
                                         </a>
                                     <?php endif; ?>
                                 </td>

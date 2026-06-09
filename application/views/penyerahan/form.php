@@ -52,9 +52,17 @@
                                 
                                 if (!empty($detail)): 
                                     foreach ($detail as $d): 
-                                        // 🔍 FILTER: Hanya tampilkan barang yang dicentang (Status = Ya)
                                         if ($d->ceklis == 1): 
                                             $ada_item_dipilih = true;
+                                            
+                                            // 1. Ambil nilai dari database dengan aman
+                                            $qty_awal  = isset($d->jumlah) ? (int)$d->jumlah : 0;
+                                            $qty_serah = isset($d->jumlah_diserahkan) ? (int)$d->jumlah_diserahkan : 0;
+                                            
+                                            // 2. Logika Tampilan: 
+                                            // Jika sudah pernah diserahkan (qty_serah > 0), tampilkan qty_serah.
+                                            // Jika belum pernah (0), tampilkan qty_awal.
+                                            $tampil_qty = ($qty_serah > 0) ? $qty_serah : $qty_awal;
                                 ?>
                                 <tr>
                                     <td class="text-center"><?= $i++ ?></td>
@@ -65,27 +73,27 @@
                                     </td>
                                     <td class="text-center">
                                         <input type="hidden" name="detail_id[]" value="<?= isset($d->detail_id) ? $d->detail_id : '' ?>">
-                                        <!-- ✅ HANYA KOLOM INI YANG BISA DIUBAH -->
+                                        
+                                        <!-- Input Jumlah Diserahkan -->
                                         <input type="number" name="jumlah_diserahkan[]" class="form-control text-center fw-bold" 
-                                               value="<?= isset($d->jumlah) ? $d->jumlah : 0 ?>" min="0" 
+                                               value="<?= $tampil_qty ?>" min="0" 
                                                style="border: 2px solid #2563eb; background: #f8fafc;">
                                     </td>
-                                   <td>
+                                    <td>
                                         <input type="text" name="keterangan[]" class="form-control form-control-sm" 
                                                value="<?= isset($d->keterangan) ? $d->keterangan : '' ?>" placeholder="Edit keterangan...">
                                     </td>
                                 </tr>
                                 <?php 
-                                        endif; // Tutup if ceklis
+                                        endif; 
                                     endforeach; 
                                 endif; 
 
-                                // Tampilkan pesan jika tidak ada barang yang dicentang
                                 if (!$ada_item_dipilih): 
                                 ?>
                                 <tr>
                                     <td colspan="6" class="text-center py-4 text-muted">
-                                        <i class="fas fa-info-circle me-2"></i>Tidak ada barang yang dipilih (dicentang) pada transaksi ini.
+                                        <i class="fas fa-info-circle me-2"></i>Tidak ada barang yang dipilih.
                                     </td>
                                 </tr>
                                 <?php endif; ?>
