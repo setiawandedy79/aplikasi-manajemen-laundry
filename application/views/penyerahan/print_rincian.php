@@ -35,12 +35,12 @@
                 <td><?= isset($header->tanggal) ? date('d/m/Y', strtotime($header->tanggal)) : '-' ?></td>
             </tr>
             <tr>
-                <td><strong>Pengirim</strong></td>
+                <td><strong>Nama Unit</strong></td>
                 <td>:</td>
-                <td><?= isset($header->nama_pengirim) ? $header->nama_pengirim : '-' ?></td>
-                <td><strong>Penerima</strong></td>
+                <td><?= isset($header->nama_pelanggan) ? $header->nama_pelanggan : '-' ?></td>
+                <!-- <td><strong>Penerima</strong></td>
                 <td>:</td>
-                <td><?= isset($header->nama_penerima) ? $header->nama_penerima : '-' ?></td>
+                <td><?= isset($header->nama_penerima) ? $header->nama_penerima : '-' ?></td> -->
             </tr>
             <tr>
                 <td><strong>Status</strong></td>
@@ -61,11 +61,11 @@
         <thead>
             <tr>
                 <th width="30">No</th>
-                <th class="text-start">Nama Linen</th>
+                <th class="text-center">Nama Linen</th>
                 <th width="80">Jml Awal</th>
                 <th width="100">Jml Diserahkan</th>
                 <th width="80">Sisa</th>
-                <th class="text-start">Keterangan</th>
+                <th class="text-center">Keterangan</th>
             </tr>
         </thead>
         <tbody>

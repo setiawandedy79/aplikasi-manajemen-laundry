@@ -81,7 +81,7 @@
                             ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td class="text-start fw-semibold"><?= $nama ?></td>
+                                <td class="text-left fw-semibold"><?= $nama ?></td>
                                 <?php for($h=1; $h<=31; $h++): 
                                     $val = isset($data_transaksi[$nama][$h]) ? $data_transaksi[$nama][$h] : 0;
                                 ?>

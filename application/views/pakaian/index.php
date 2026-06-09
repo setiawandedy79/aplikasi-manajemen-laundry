@@ -33,7 +33,7 @@
                             <?php $no = 1; foreach ($pakaian as $row): ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><strong><?= $row->nama_pakaian ?></strong></td>
+                                <td class="text-left"><strong><?= $row->nama_pakaian ?></strong></td>
                                 <td><span class="badge bg-info"><?= $row->kategori ?></span></td>
                                 <td class="text-center"><?= isset($row->berat_kotor) ? number_format($row->berat_kotor, 2) : '0.00' ?> Kg</td>
                                 <td class="text-center"><?= isset($row->berat_bersih) ? number_format($row->berat_bersih, 2) : '0.00' ?> Kg</td>

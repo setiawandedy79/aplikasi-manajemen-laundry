@@ -102,11 +102,11 @@
         <?php endif; ?> -->
 
         <!-- ✅ MENU BARU: REKAPITULASI CHEMICAL -->
-        <?php if (is_allowed('laporan')): ?>
+       <!--  <?php if (is_allowed('laporan')): ?>
         <a href="<?= base_url('laporan/rekapitulasi_chemical') ?>" class="<?= $this->uri->segment(2) == 'rekapitulasi_chemical' ? 'active' : '' ?>">
             <i class="fas fa-chart-bar"></i> Rekapitulasi Chemical
         </a>
-        <?php endif; ?>
+        <?php endif; ?> -->
 
         <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px;">
             <a href="<?= base_url('auth/logout') ?>">

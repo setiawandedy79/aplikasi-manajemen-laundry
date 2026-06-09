@@ -42,8 +42,8 @@
                                 <label class="form-label fw-500">Shift <span class="text-danger">*</span></label>
                                 <select name="shift" class="form-select" required>
                                     <option value="">Pilih Shift</option>
-                                    <option value="pagi" <?= (isset($header) && $header->shift == 'pagi') ? 'selected' : '' ?>>Pagi (06:00 - 14:00)</option>
-                                    <option value="siang" <?= (isset($header) && $header->shift == 'siang') ? 'selected' : '' ?>>Siang (14:00 - 22:00)</option>
+                                    <option value="pagi" <?= (isset($header) && $header->shift == 'pagi') ? 'selected' : '' ?>>Pagi (06:00 - 10:00)</option>
+                                    <option value="siang" <?= (isset($header) && $header->shift == 'siang') ? 'selected' : '' ?>>Siang (14:00 - 19:00)</option>
                                 </select>
                             </div>
                            
@@ -131,7 +131,7 @@
                                     ?>
                                     <tr>
                                         <td class="text-center"><?= $i + 1 ?></td>
-                                        <td><strong><?= $p->nama_pakaian ?></strong></td>
+                                        <td class="text-left"><strong><?= $p->nama_pakaian ?></strong></td>
                                         <td class="text-center"><span class="badge bg-info"><?= $p->kategori ?></span></td>
                                         
                                         <td class="text-center">

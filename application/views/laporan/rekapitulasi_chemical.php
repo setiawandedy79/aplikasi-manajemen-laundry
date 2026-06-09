@@ -72,7 +72,7 @@
                             ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td class="text-start fw-semibold"><?= $nama ?></td>
+                                <td class="text-left fw-semibold"><?= $nama ?></td>
                                 <?php for($b=1; $b<=12; $b++): 
                                     $val = isset($data_transaksi[$nama][$b]) ? $data_transaksi[$nama][$b] : 0;
                                 ?>

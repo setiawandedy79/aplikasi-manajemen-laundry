@@ -15,9 +15,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label fw-500">Pilih Sabun <span class="text-danger">*</span></label>
+                                <label class="form-label fw-500">Pilih Chemical <span class="text-danger">*</span></label>
                                 <select name="sabun_id" id="sabun_id" class="form-select" required>
-                                    <option value="">-- Pilih Sabun --</option>
+                                    <option value="">-- Pilih Chemical --</option>
                                     <?php foreach ($sabun as $s): ?>
                                     <option value="<?= $s->id ?>" data-stok="<?= $s->stok_akhir ?>" data-satuan="<?= $s->nama_satuan ?>" <?= ($row->sabun_id ?? '') == $s->id ? 'selected' : '' ?>>
                                         <?= $s->nama_sabun ?> (Stok saat ini: <?= $s->stok_akhir ?> <?= $s->nama_satuan ?>)
@@ -33,7 +33,7 @@
                             <div class="mb-3">
                                 <label class="form-label fw-500">Jumlah Masuk <span class="text-danger">*</span></label>
                                 <input type="number" step="0.01" name="jumlah" class="form-control" value="<?= $row->jumlah ?? '0' ?>" required min="0.01">
-                                <small class="text-muted">Masukkan jumlah sabun yang baru diterima/ditambahkan</small>
+                                <small class="text-muted">Masukkan jumlah chemical yang baru diterima/ditambahkan</small>
                             </div>
                         </div>
                         <div class="col-md-6">

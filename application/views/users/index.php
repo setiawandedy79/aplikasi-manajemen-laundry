@@ -21,10 +21,10 @@
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>No</th>
-                                <th>Username</th>
-                                <th>Nama Lengkap</th>
-                                <th>Role</th>
+                                <th class="text-center" width="20">No</th>
+                                <th class="text-center" width="120">Username</th>
+                                <th class="text-center" width="120">Nama Lengkap</th>
+                                <th class="text-center" width="120">Hak Akses</th>
                                 <th class="text-center" width="120">Aksi</th>
                             </tr>
                         </thead>
@@ -32,8 +32,8 @@
                             <?php $no = 1; foreach ($users as $row): ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><strong><?= $row->username ?></strong></td>
-                                <td><?= $row->nama_lengkap ?></td>
+                                <td class="text-left"><strong><?= $row->username ?></strong></td>
+                                <td class="text-left"><?= $row->nama_lengkap ?></td>
                                 <td><span class="badge <?= $row->role == 'admin' ? 'bg-danger' : 'bg-primary' ?>"><?= ucfirst($row->role) ?></span></td>
                                 <td class="text-center">
                                     <a href="<?= base_url('users/edit/'.$row->id) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>

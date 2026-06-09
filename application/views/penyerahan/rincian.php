@@ -10,8 +10,8 @@
                 <div class="row">
                     <div class="col-md-3"><strong>No. Transaksi:</strong> <?= isset($header->no_transaksi) ? $header->no_transaksi : '-' ?></div>
                     <div class="col-md-3"><strong>Tanggal:</strong> <?= isset($header->tanggal) ? date('d/m/Y', strtotime($header->tanggal)) : '-' ?></div>
-                    <div class="col-md-3"><strong>Pengirim:</strong> <?= isset($header->nama_pengirim) ? $header->nama_pengirim : '-' ?></div>
-                    <div class="col-md-3"><strong>Penerima:</strong> <?= isset($header->nama_penerima) ? $header->nama_penerima : '-' ?></div>
+                    <div class="col-md-3"><strong>Nama Unit:</strong> <?= isset($header->nama_pelanggan) ? $header->nama_pelanggan : '-' ?></div>
+                    <!-- <div class="col-md-3"><strong>Penerima:</strong> <?= isset($header->nama_penerima) ? $header->nama_penerima : '-' ?></div> -->
                     <div class="col-md-12 mt-2">
                         <strong>Status:</strong> 
                         <?php if (isset($header->status_serah) && $header->status_serah == 'diserahkan'): ?>
@@ -36,7 +36,7 @@
                         <thead class="table-dark">
                             <tr>
                                 <th width="50">No</th>
-                                <th class="text-start">Nama Linen</th>
+                                <th class="text-center">Nama Linen</th>
                                 <th width="120">Jumlah Awal</th>
                                 <th width="150">Jumlah Diserahkan</th>
                                 <th width="130">Sisa / Belum Diambil</th>
@@ -65,7 +65,7 @@
                             ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td class="text-start fw-semibold"><?= isset($d->nama_pakaian) ? $d->nama_pakaian : '-' ?></td>
+                                <td class="text-left fw-semibold"><?= isset($d->nama_pakaian) ? $d->nama_pakaian : '-' ?></td>
                                 <td class="fw-bold"><?= $qty_awal ?></td>
                                 <td class="fw-bold text-primary"><?= $qty_serah ?></td>
                                 <td>

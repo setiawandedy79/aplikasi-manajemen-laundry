@@ -97,7 +97,7 @@
                             ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td class="text-start"><?= isset($linen->nama_pakaian) ? $linen->nama_pakaian : '-' ?></td>
+                                <td class="text-left"><?= isset($linen->nama_pakaian) ? $linen->nama_pakaian : '-' ?></td>
                                 <td><?= number_format($berat_satuan, 2) ?></td>
                                 <?php for($h=1; $h<=31; $h++): 
                                     $val = isset($data_transaksi[$pid][$h]) ? $data_transaksi[$pid][$h] : 0;

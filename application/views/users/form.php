@@ -49,14 +49,14 @@
                                 💰 Kasir (Transaksi & Laporan)
                             </option>
                             <option value="operator" <?= (set_value('role', $row->role ?? '') == 'operator') ? 'selected' : '' ?>>
-                                ⚙️ Operator (Pemakaian & Mutasi Sabun)
+                                ⚙️ Operator (Pemakaian & Mutasi Chemical)
                             </option>
                         </select>
                         <small class="text-muted">
                             <ul class="mt-1 mb-0 ps-3">
                                 <li><strong>Admin:</strong> Akses semua menu</li>
                                 <li><strong>Kasir:</strong> Transaksi, Pelanggan, Laporan</li>
-                                <li><strong>Operator:</strong> Pemakaian Sabun, Mutasi, Laporan</li>
+                                <li><strong>Operator:</strong> Pemakaian Chemical, Mutasi, Laporan</li>
                             </ul>
                         </small>
                     </div>

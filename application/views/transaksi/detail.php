@@ -84,7 +84,7 @@
                             <?php $no = 1; foreach ($detail as $d): ?>
                             <tr>
                                 <td class="text-center"><?= $no++ ?></td>
-                                <td><strong><?= $d->nama_pakaian ?></strong></td>
+                                <td class="text-left"><strong><?= $d->nama_pakaian ?></strong></td>
                                 <td class="text-center"><span class="badge bg-info"><?= $d->kategori ?></span></td>
                                 
                                 <td class="text-center fw-bold"><?= $d->jumlah ?: 0 ?></td>

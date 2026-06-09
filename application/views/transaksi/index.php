@@ -66,7 +66,7 @@
                                 </small> --></td>
                             <!-- <td><strong class="text-primary"><?= $row->no_transaksi ?></strong></td> -->
                             <td><?= date('d/m/Y', strtotime($row->tanggal)) ?></td>
-                            <td><?= isset($row->nama_pelanggan) ? $row->nama_pelanggan : '-' ?></td>
+                            <td class="text-left"><?= isset($row->nama_pelanggan) ? $row->nama_pelanggan : '-' ?></td>
                             <td><?= $row->nama_pengirim ?></td>
                             <td><?= $row->nama_penerima ?></td>
                             <td>

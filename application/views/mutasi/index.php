@@ -25,7 +25,7 @@
                             <tr>
                                 <th class="text-center">No</th>
                                 <th class="text-center">Tanggal</th>
-                                <th class="text-center">Nama Sabun</th>
+                                <th class="text-center">Nama Chemical</th>
                                 <th class="text-center">Jumlah</th>
                                 <th class="text-center">Satuan</th>
                                 <th class="text-center">Keterangan</th>
@@ -38,8 +38,8 @@
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= date('d/m/Y', strtotime($row->tanggal)) ?></td>
-                                <td><strong><?= $row->nama_sabun ?></strong></td>
-                                <td class="text-center fw-bold text-success">+ <?= $row->jumlah ?></td>
+                                <td class="text-left"><strong><?= $row->nama_sabun ?></strong></td>
+                                <td class="text-right fw-bold text-success">+ <?= $row->jumlah ?></td>
                                 <td><?= $row->nama_satuan ?></td>
                                 <td><?= $row->keterangan ?: '-' ?></td>
                                 <td><?= $row->nama_lengkap ?: '-' ?></td>

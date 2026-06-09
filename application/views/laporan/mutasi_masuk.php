@@ -43,8 +43,8 @@
                             <tr>
                                 <td class="text-center"><?= $no++ ?></td>
                                 <td><?= date('d/m/Y', strtotime($row->tanggal)) ?></td>
-                                <td><strong><?= $row->nama_sabun ?></strong></td>
-                                <td class="text-center"><?= $row->jumlah ?></td>
+                                <td class="text-left"><strong><?= $row->nama_sabun ?></strong></td>
+                                <td class="text-right"><?= $row->jumlah ?></td>
                                 <td><?= $row->nama_satuan ?></td>
                                 <td><?= $row->keterangan ?: '-' ?></td>
                                 <td><?= $row->nama_lengkap ?: '-' ?></td>

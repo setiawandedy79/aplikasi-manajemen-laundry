@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class User_model extends CI_Model {
 
     public function get_all() {
-        return $this->db->order_by('id', 'DESC')->get('users')->result();
+        return $this->db->order_by('id', 'ASC')->get('users')->result();
     }
 
     public function get_by_id($id) {

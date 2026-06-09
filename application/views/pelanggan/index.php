@@ -32,7 +32,7 @@
                             <?php $no = 1; foreach ($pelanggan as $row): ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><strong><?= $row->nama ?></strong></td>
+                                <td class="text-left"><strong><?= $row->nama ?></strong></td>
                                 <td><?= $row->alamat ?></td>
                                 <td><?= $row->telepon ?></td>
                                 <td class="text-center">

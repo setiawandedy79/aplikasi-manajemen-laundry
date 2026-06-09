@@ -85,7 +85,7 @@
                             ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td class="text-start"><?= $linen->nama_pakaian ?></td>
+                                <td class="text-left"><?= $linen->nama_pakaian ?></td>
                                 <?php for($h=1; $h<=31; $h++): 
                                     $val = isset($data_transaksi[$pid][$h]) ? $data_transaksi[$pid][$h] : 0;
                                     if($val > 0) $total_per_hari[$h] += $val;

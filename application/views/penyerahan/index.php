@@ -23,8 +23,9 @@
                                 <th class="text-center">No</th>
                                 <th class="text-center">No Transaksi</th>
                                 <th class="text-center">Tanggal</th>
-                                <th class="text-center">Pengirim</th>
-                                <th class="text-center">Penerima</th>
+                                <th class="text-center">Nama Unit</th>
+                               <!--  <th class="text-center">Pengirim</th>
+                                <th class="text-center">Penerima</th> -->
                                 <th class="text-center" width="100">Jumlah Awal</th>
                                 <th class="text-center" width="130">Jumlah Diserahkan</th>
                                 <th class="text-center">Status Serah</th>
@@ -37,8 +38,9 @@
                                 <td><?= $no++ ?></td>
                                 <td><strong class="text-primary"><?= $row->no_transaksi ?></strong></td>
                                 <td><?= date('d/m/Y', strtotime($row->tanggal)) ?></td>
-                                <td><?= $row->nama_pengirim ?></td>
-                                <td><?= $row->nama_penerima ?></td>
+                                <td><?= isset($row->nama_pelanggan) ? $row->nama_pelanggan : '-' ?></td>
+                                <!-- <td><?= $row->nama_pengirim ?></td>
+                                <td><?= $row->nama_penerima ?></td> -->
                                 <td class="text-center fw-bold"><?= isset($row->total_jumlah_awal) ? $row->total_jumlah_awal : 0 ?></td>
                                 <td class="text-center fw-bold text-primary"><?= isset($row->total_jumlah_diserahkan) ? $row->total_jumlah_diserahkan : 0 ?></td>
                                 <td>

@@ -55,6 +55,8 @@ class Transaksi_model extends CI_Model {
             $this->db->from('transaksi_detail');
             $this->db->join('pakaian', 'pakaian.id = transaksi_detail.pakaian_id', 'left');
             $this->db->where('transaksi_detail.transaksi_id', $transaksi_id);
+            // ✅ TAMBAHKAN BARIS INI (ASC = A ke Z)
+            $this->db->order_by('pakaian.nama_pakaian', 'ASC'); 
             return $this->db->get()->result();
 
         }

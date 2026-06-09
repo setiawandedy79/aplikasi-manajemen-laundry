@@ -31,7 +31,7 @@
                             <tr>
                                 <th class="text-center">No</th>
                                 <th class="text-center">Tanggal</th>
-                                <th class="text-center">Sabun</th>
+                                <th class="text-center">Chemical</th>
                                 <th class="text-center">Jumlah</th>
                                 <th class="text-center">Shift</th>
                                 <th class="text-center">Keterangan</th>
@@ -44,7 +44,7 @@
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= date('d/m/Y', strtotime($row->tanggal)) ?></td>
-                                <td><strong><?= $row->nama_sabun ?></strong></td>
+                                <td class="text-left"><strong><?= $row->nama_sabun ?></strong></td>
                                 <td class="text-center"><?= $row->jumlah ?> <?= $row->nama_satuan ?></td>
                                 <td class="text-center">
                                     <span class="badge <?= $row->shift == 'pagi' ? 'badge-shift-pagi' : 'badge-shift-siang' ?>"><?= ucfirst($row->shift) ?></span>

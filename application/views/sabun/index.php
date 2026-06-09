@@ -34,7 +34,7 @@
                             <?php $no = 1; foreach ($sabun as $row): ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><strong><?= $row->nama_sabun ?></strong></td>
+                                <td class="text-left"><strong><?= $row->nama_sabun ?></strong></td>
                                 <td><?= $row->nama_satuan ?></td>
                                 <td><?= isset($row->nama_supplier) ? $row->nama_supplier : '<span class="text-muted">-</span>' ?></td> <!-- ✅ TAMBAH -->
                                 <td class="text-center"><?= $row->stok_awal ?></td>

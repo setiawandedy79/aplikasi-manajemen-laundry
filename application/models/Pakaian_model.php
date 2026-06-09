@@ -2,7 +2,9 @@
 class Pakaian_model extends CI_Model {
 
     public function get_all() {
-        return $this->db->order_by('id', 'DESC')->get('pakaian')->result();
+        // ASC = Ascending (A ke Z)
+        // DESC = Descending (Z ke A)
+        return $this->db->order_by('id', 'ASC')->get('pakaian')->result();
     }
 
     public function get_by_id($id) {

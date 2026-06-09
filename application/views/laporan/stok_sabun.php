@@ -1,21 +1,21 @@
 <div class="main-content">
     <div class="topbar">
-        <h5><i class="fas fa-boxes me-2"></i> Laporan Stok Sabun</h5>
+        <h5><i class="fas fa-boxes me-2"></i> Laporan Stok Chemical</h5>
     </div>
     <div class="content-area">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 fw-bold">Stok Awal, Pemakaian & Stok Akhir Sabun</h6>
+                <h6 class="mb-0 fw-bold">Stok Awal, Pemakaian & Stok Akhir Chemical</h6>
                 <button onclick="window.print()" class="btn btn-secondary btn-sm"><i class="fas fa-print me-1"></i> Print</button>
             </div>
             <div class="card-body">
-                <h6 class="text-center mb-3">LAPORAN STOK SABUN</h6>
+                <h6 class="text-center mb-3">LAPORAN STOK CHEMICAL</h6>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
                             <tr>
                                 <th class="text-center" width="50">No</th>
-                                <th>Nama Sabun</th>
+                                <th class="text-center">Nama Chemical</th>
                                 <th class="text-center">Stok Awal</th>
                                 <th class="text-center">Total Masuk</th>
                                 <th class="text-center">Total Pemakaian</th>
@@ -36,7 +36,7 @@
                             ?>
                             <tr>
                                 <td class="text-center"><?= $no++ ?></td>
-                                <td><strong><?= $row->nama_sabun ?></strong></td>
+                                <td class="text-left"><strong><?= $row->nama_sabun ?></strong></td>
                                 <td class="text-center"><?= $row->stok_awal ?></td>
                                 <td class="text-center text-success">+ <?= $masuk ?></td>
                                 <td class="text-center text-danger">- <?= $pemakaian ?></td>

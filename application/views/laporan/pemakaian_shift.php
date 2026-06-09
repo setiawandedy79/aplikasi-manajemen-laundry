@@ -64,7 +64,7 @@
                             <tr>
                                 <td class="text-center"><?= $no++ ?></td>
                                 <td class="text-center"><?= date('d/m/Y', strtotime($row->tanggal)) ?></td>
-                                <td><strong><?= $row->nama_sabun ?></strong></td>
+                                <td class="text-left"><strong><?= $row->nama_sabun ?></strong></td>
                                 <td class="text-center"><?= $row->jumlah ?></td>
                                 <td class="text-center"><?= $row->nama_satuan ?></td>
                                 <td class="text-center">

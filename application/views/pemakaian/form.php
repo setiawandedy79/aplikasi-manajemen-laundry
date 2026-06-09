@@ -1,6 +1,6 @@
 <div class="main-content">
     <div class="topbar">
-        <h5><i class="fas fa-clock me-2"></i> <?= isset($row) ? 'Edit' : 'Tambah' ?> Pemakaian Sabun</h5>
+        <h5><i class="fas fa-clock me-2"></i> <?= isset($row) ? 'Edit' : 'Tambah' ?> Pemakaian Chemical</h5>
     </div>
     <div class="content-area">
         <div class="card" style="max-width: 650px;">
@@ -26,9 +26,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-500">Pilih Sabun <span class="text-danger">*</span></label>
+                        <label class="form-label fw-500">Pilih Chemical <span class="text-danger">*</span></label>
                         <select name="sabun_id" id="sabun_id" class="form-select" required>
-                            <option value="">-- Pilih Sabun --</option>
+                            <option value="">-- Pilih Chemical --</option>
                             <?php foreach ($sabun as $s): ?>
                             <option value="<?= $s->id ?>" data-stok="<?= $s->stok_akhir ?>" data-satuan="<?= $s->nama_satuan ?>" <?= ($row->sabun_id ?? '') == $s->id ? 'selected' : '' ?>>
                                 <?= $s->nama_sabun ?> (Stok: <?= $s->stok_akhir ?> <?= $s->nama_satuan ?>)

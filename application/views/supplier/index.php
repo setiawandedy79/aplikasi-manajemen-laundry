@@ -19,10 +19,11 @@
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>No</th>
-                                <th>Nama Supplier</th>
-                                <th>Kontak</th>
-                                <th>Telepon</th>
+                                <th class="text-center" width="20">No</th>
+                                <th class="text-center" width="120">Nama Supplier</th>
+                                <th class="text-center" width="120">Kontak</th>
+                                <th class="text-center" width="120">Alamat</th>
+                                <th class="text-center" width="120">Telepon</th>
                                 <th class="text-center" width="120">Aksi</th>
                             </tr>
                         </thead>
@@ -30,8 +31,9 @@
                             <?php $no = 1; foreach ($supplier as $row): ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><strong><?= isset($row->nama_supplier) ? $row->nama_supplier : '' ?></strong></td>
+                                <td class="text-left"><strong><?= isset($row->nama_supplier) ? $row->nama_supplier : '' ?></strong></td>
                                 <td><?= isset($row->kontak) ? $row->kontak : '-' ?></td>
+                                <td><?= isset($row->alamat) ? $row->alamat : '-' ?></td>
                                 <td><?= isset($row->telepon) ? $row->telepon : '-' ?></td>
                                 <td class="text-center">
                                     <a href="<?= base_url('supplier/edit/'.$row->id) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
