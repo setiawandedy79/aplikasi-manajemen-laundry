@@ -3,25 +3,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Transaksi_model extends CI_Model {
 
-    public function get_all($keyword = '') {
+    public function get_all($keyword = '', $pelanggan_id = null) {
         $this->db->select('transaksi_header.*, pelanggan.nama as nama_pelanggan, users.nama_lengkap');
         $this->db->from('transaksi_header');
         $this->db->join('pelanggan', 'pelanggan.id = transaksi_header.pelanggan_id', 'left');
         $this->db->join('users', 'users.id = transaksi_header.user_id', 'left');
         
-
+        // 🔒 FILTER: Jika user punya pelanggan_id, tampilkan hanya transaksi unit tersebut
+        if (!empty($pelanggan_id)) {
+            $this->db->where('transaksi_header.pelanggan_id', $pelanggan_id);
+        }
+        
         // 🔍 Logic Search
-            if (!empty($keyword)) {
-                $this->db->group_start();
-                $this->db->like('transaksi_header.no_transaksi', $keyword);
-                $this->db->or_like('transaksi_header.nama_pengirim', $keyword);
-                $this->db->or_like('transaksi_header.nama_penerima', $keyword);
-                $this->db->or_like('pelanggan.nama', $keyword);
-                $this->db->group_end();
-            }
-            
-            $this->db->order_by('transaksi_header.id', 'DESC');
-            return $this->db->get()->result();
+        if (!empty($keyword)) {
+            $this->db->group_start();
+            $this->db->like('transaksi_header.no_transaksi', $keyword);
+            $this->db->or_like('transaksi_header.nama_pengirim', $keyword);
+            $this->db->or_like('transaksi_header.nama_penerima', $keyword);
+            $this->db->or_like('pelanggan.nama', $keyword);
+            $this->db->group_end();
+        }
+        
+        $this->db->order_by('transaksi_header.id', 'DESC');
+        return $this->db->get()->result();
     }
 
     public function get_header_by_id($id) {
@@ -158,35 +162,47 @@ class Transaksi_model extends CI_Model {
         return true;
     }
 
-    public function count_all() {
-        return $this->db->count_all('transaksi_header');
+    public function count_all($pelanggan_id = null) {
+        if (!empty($pelanggan_id)) {
+            $this->db->where('pelanggan_id', $pelanggan_id);
+        }
+        return $this->db->count_all_results('transaksi_header');
     }
 
-    public function get_latest($limit) {
+    public function get_latest($limit, $pelanggan_id = null) {
+    // 🔒 Filter juga di dashboard
+        if (!empty($pelanggan_id)) {
+            $this->db->where('pelanggan_id', $pelanggan_id);
+        }
         $this->db->order_by('id', 'DESC')->limit($limit);
         return $this->db->get('transaksi_header')->result();
     }
 
-    public function get_list_penyerahan() {
-            $this->db->select('
-                transaksi_header.*, 
-                pelanggan.nama as nama_pelanggan,
-                SUM(transaksi_detail.jumlah) as total_jumlah_awal,
-                SUM(transaksi_detail.jumlah_diserahkan) as total_jumlah_diserahkan
-            ');
-            $this->db->from('transaksi_header');
-            $this->db->join('pelanggan', 'pelanggan.id = transaksi_header.pelanggan_id', 'left');
-            $this->db->join('transaksi_detail', 'transaksi_detail.transaksi_id = transaksi_header.id', 'left');
-            
-            // Urutkan: yang belum diserahkan di atas, lalu berdasarkan tanggal terbaru
-            $this->db->order_by("FIELD(transaksi_header.status_serah, 'belum', 'diserahkan') ASC", '', FALSE);
-            $this->db->order_by('transaksi_header.tanggal', 'DESC');
-            
-            // WAJIB: Group by header id agar fungsi SUM() tidak error
-            $this->db->group_by('transaksi_header.id'); 
-            
-            return $this->db->get()->result();
+    public function get_list_penyerahan($pelanggan_id = null) {
+        $this->db->select('
+            transaksi_header.*,
+            pelanggan.nama as nama_pelanggan,
+            SUM(transaksi_detail.jumlah) as total_jumlah_awal,
+            SUM(transaksi_detail.jumlah_diserahkan) as total_jumlah_diserahkan
+        ');
+        $this->db->from('transaksi_header');
+        $this->db->join('pelanggan', 'pelanggan.id = transaksi_header.pelanggan_id', 'left');
+        $this->db->join('transaksi_detail', 'transaksi_detail.transaksi_id = transaksi_header.id', 'left');
+
+        // 🔒 FILTER: Jika user punya pelanggan_id, tampilkan hanya transaksi unit tersebut
+        if (!empty($pelanggan_id)) {
+            $this->db->where('transaksi_header.pelanggan_id', $pelanggan_id);
         }
+
+        // Urutkan: yang belum diserahkan di atas, lalu berdasarkan tanggal terbaru
+        $this->db->order_by("FIELD(transaksi_header.status_serah, 'belum', 'diserahkan') ASC", '', FALSE);
+        $this->db->order_by('transaksi_header.tanggal', 'DESC');
+        
+        // WAJIB: Group by header id agar fungsi SUM() tidak error
+        $this->db->group_by('transaksi_header.id');
+        
+        return $this->db->get()->result();
+    }
 
     public function get_detail_for_penyerahan($transaksi_id) {
         // Sebutkan kolom secara eksplisit agar tidak tertukar

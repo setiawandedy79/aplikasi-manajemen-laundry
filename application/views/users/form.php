@@ -46,19 +46,35 @@
                                 👑 Admin (Full Akses)
                             </option>
                             <option value="kasir" <?= (set_value('role', $row->role ?? '') == 'kasir') ? 'selected' : '' ?>>
-                                💰 Kasir (Transaksi & Laporan)
+                                💰 User (Transaksi & Laporan)
                             </option>
                             <option value="operator" <?= (set_value('role', $row->role ?? '') == 'operator') ? 'selected' : '' ?>>
-                                ⚙️ Operator (Pemakaian & Mutasi Chemical)
+                                ⚙️ Admin Linen (Pemakaian & Mutasi Chemical)
                             </option>
                         </select>
                         <small class="text-muted">
                             <ul class="mt-1 mb-0 ps-3">
                                 <li><strong>Admin:</strong> Akses semua menu</li>
-                                <li><strong>Kasir:</strong> Transaksi, Pelanggan, Laporan</li>
-                                <li><strong>Operator:</strong> Pemakaian Chemical, Mutasi, Laporan</li>
+                                <li><strong>User:</strong> Transaksi, Pelanggan, Laporan</li>
+                                <li><strong>Admin Linen:</strong> Pemakaian Chemical, Mutasi, Laporan</li>
                             </ul>
                         </small>
+                    </div>
+
+                    <!-- ✅ TAMBAHAN: Dropdown Unit / Ruangan -->
+                    <div class="mb-3">
+                        <label class="form-label fw-500">Unit / Ruangan (Opsional)</label>
+                        <select name="pelanggan_id" class="form-select">
+                            <option value="">-- Tidak Ada / Admin Pusat --</option>
+                            <?php if (!empty($pelanggan_list)): ?>
+                                <?php foreach ($pelanggan_list as $p): ?>
+                                    <option value="<?= $p->id ?>" <?= (isset($row->pelanggan_id) && $row->pelanggan_id == $p->id) ? 'selected' : '' ?>>
+                                        <?= isset($p->nama) ? $p->nama : '' ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                        <small class="text-muted">Kosongkan jika user ini adalah Admin Pusat atau tidak terikat satu unit tertentu.</small>
                     </div>
 
                     <div class="d-flex gap-2">

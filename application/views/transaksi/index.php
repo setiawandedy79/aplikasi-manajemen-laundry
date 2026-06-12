@@ -1,7 +1,7 @@
 <div class="content-area">
-    <div class="main-content" style="margin-left: 205px !important;">
+    <div class="main-content" style="margin-left: 165px !important;">
     <!-- <div class="topbar">...</div> -->
-    <div class="content-area" style="padding-left: 35px !important;">
+    <div class="content-area" style="padding-left: 65px !important;">
     <!-- 🔍 FORM PENCARIAN -->
     <div class="card mb-3 border-0 shadow-sm">
         <div class="card-body py-2">

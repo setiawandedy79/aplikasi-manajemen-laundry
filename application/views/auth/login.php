@@ -100,7 +100,7 @@
             </button>
         </form>
         <div class="text-center mt-3">
-            <small class="text-muted">Develop by : IT RSPM</small>
+            <small class="text-muted">Develop by : IT RSPM - <?php echo date('Y'); ?></small>
         </div>
     </div>
 </body>

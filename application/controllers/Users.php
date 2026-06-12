@@ -23,6 +23,7 @@ class Users extends MY_Controller { // Pastikan extend MY_Controller untuk prote
 
     public function add() {
         $data['title'] = 'Tambah User';
+        $data['pelanggan_list'] = $this->db->order_by('nama', 'ASC')->get('pelanggan')->result(); // ✅ TAMBAHAN
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar');
         $this->load->view('users/form', $data);
@@ -52,6 +53,7 @@ class Users extends MY_Controller { // Pastikan extend MY_Controller untuk prote
     public function edit($id) {
         $data['title'] = 'Edit User';
         $data['row'] = $this->User_model->get_by_id($id);
+        $data['pelanggan_list'] = $this->db->order_by('nama', 'ASC')->get('pelanggan')->result(); // ✅ TAMBAHAN
         if (!$data['row']) redirect('users');
         
         $this->load->view('templates/header', $data);

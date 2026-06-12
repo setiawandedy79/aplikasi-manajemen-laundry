@@ -44,14 +44,38 @@ class Mutasi extends MY_Controller {
     }
 
     public function update($id) {
-        $this->Mutasi_model->update($id);
-        $this->session->set_flashdata('success', 'Data berhasil diupdate & stok disesuaikan');
+       $this->load->model('Activity_log_model');
+    // 1. AMBIL DATA LAMA SEBELUM DIHAPUS
+        $old_data = $this->Mutasi_model->get_header_by_id($id);
+
+    // 2. PROSES HAPUS
+        $this->Mutasi_model->delete($id);
+
+    // 3. CATAT KE LOG (new_data kosong karena dihapus)
+        $this->Activity_log_model->add_log('mutasi', 'DELETE', $id, $old_data, null);
+
+        $this->session->set_flashdata('success', 'Data berhasil dihapus');
         redirect('mutasi');
+        //$this->load->model('Activity_log_model');
+        // $this->Mutasi_model->update($id);
+        // $this->session->set_flashdata('success', 'Data berhasil diupdate & stok disesuaikan');
+        // redirect('mutasi');
     }
 
     public function delete($id) {
-        $this->Mutasi_model->delete($id);
-        $this->session->set_flashdata('success', 'Data dihapus & stok dikembalikan');
-        redirect('mutasi');
+        // 1. AMBIL DATA LAMA SEBELUM DIHAPUS
+            $old_data = $this->Mutasi_model->get_header_by_id($id);
+
+        // 2. PROSES HAPUS
+            $this->Mutasi_model->delete($id);
+
+        // 3. CATAT KE LOG (new_data kosong karena dihapus)
+            $this->Activity_log_model->add_log('mutasi', 'DELETE', $id, $old_data, null);
+
+            $this->session->set_flashdata('success', 'Data berhasil dihapus');
+            redirect('mutasi');
+        // $this->Mutasi_model->delete($id);
+        // $this->session->set_flashdata('success', 'Data dihapus & stok dikembalikan');
+        // redirect('mutasi');
     }
 }

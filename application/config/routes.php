@@ -124,6 +124,9 @@ $route['laporan/print_pengembalian_linen'] = 'laporan/print_pengembalian_linen';
 $route['laporan/rekapitulasi_pencucian'] = 'laporan/rekapitulasi_pencucian';
 $route['laporan/print_rekapitulasi_pencucian'] = 'laporan/print_rekapitulasi_pencucian';
 
+// Log Activity
+$route['log_activity'] = 'log_activity';
+
 // $route['default_controller'] = 'welcome';
 // $route['404_override'] = '';
 // $route['translate_uri_dashes'] = FALSE;

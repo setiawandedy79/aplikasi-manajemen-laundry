@@ -48,24 +48,27 @@
             <i class="fas fa-receipt"></i> Transaksi Laundry
         </a>
         <?php endif; ?>
-        <?php if (is_allowed('mutasi')): ?>
-        <a href="<?= base_url('mutasi') ?>" class="<?= $this->uri->segment(1) == 'mutasi' ? 'active' : '' ?>">
-            <i class="fas fa-truck-loading"></i> Mutasi Masuk Chemical
-        </a>
-        
-        <?php endif; ?>
-        <?php if (is_allowed('pemakaian')): ?>
-        <a href="<?= base_url('pemakaian') ?>" class="<?= $this->uri->segment(1) == 'pemakaian' ? 'active' : '' ?>">
-            <i class="fas fa-clock"></i> Pemakaian Chemical
-        </a>
-        
-        <?php endif; ?>
+
         <?php if (is_allowed('penyerahan')): ?>
         <a href="<?= base_url('penyerahan') ?>" class="<?= $this->uri->segment(1) == 'penyerahan' ? 'active' : '' ?>">
             <i class="fas fa-hand-holding"></i> Penyerahan Laundry
         </a>
         <?php endif; ?>
 
+        <?php if (is_allowed('mutasi')): ?>
+        <a href="<?= base_url('mutasi') ?>" class="<?= $this->uri->segment(1) == 'mutasi' ? 'active' : '' ?>">
+            <i class="fas fa-truck-loading"></i> Mutasi Masuk Chemical
+        </a>
+        
+        <?php endif; ?>
+
+        <?php if (is_allowed('pemakaian')): ?>
+        <a href="<?= base_url('pemakaian') ?>" class="<?= $this->uri->segment(1) == 'pemakaian' ? 'active' : '' ?>">
+            <i class="fas fa-clock"></i> Pemakaian Chemical
+        </a>
+        
+        <?php endif; ?>
+        
         <div class="nav-section">Laporan</div>
         <?php if (is_allowed('laporan')): ?>
         <a href="<?= base_url('laporan') ?>" class="<?= strpos($this->uri->uri_string(), 'laporan') !== false ? 'active' : '' ?>">
@@ -107,6 +110,14 @@
             <i class="fas fa-chart-bar"></i> Rekapitulasi Chemical
         </a>
         <?php endif; ?> -->
+
+        <!-- ✅ MENU BARU: Log Activity -->
+        <?php if ($this->session->userdata('role') === 'admin'): ?>
+        <div class="nav-section mt-3">Administrasi</div>
+        <a href="<?= base_url('log_activity') ?>" class="<?= $this->uri->segment(1) == 'log_activity' ? 'active' : '' ?>">
+            <i class="fas fa-history"></i> Log Aktivitas
+        </a>
+        <?php endif; ?>
 
         <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px;">
             <a href="<?= base_url('auth/logout') ?>">

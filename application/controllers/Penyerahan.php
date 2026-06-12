@@ -13,7 +13,16 @@ class Penyerahan extends MY_Controller {
 
     public function index() {
         $data['title'] = 'Penyerahan Laundry';
-        $data['transaksi'] = $this->Transaksi_model->get_list_penyerahan();
+        // 1. Ambil data user yang sedang login
+            $user_id = $this->session->userdata('user_id');
+            $user_data = $this->db->where('id', $user_id)->get('users')->row();
+            
+        // 2. Ambil pelanggan_id-nya (Jika NULL, berarti Admin yang bisa lihat semua)
+            $pelanggan_id = isset($user_data->pelanggan_id) ? $user_data->pelanggan_id : null;
+            
+        // 3. Kirim pelanggan_id ke model untuk proses filter
+            $data['transaksi'] = $this->Transaksi_model->get_list_penyerahan($pelanggan_id);
+
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar');
         $this->load->view('penyerahan/index', $data);
@@ -22,6 +31,16 @@ class Penyerahan extends MY_Controller {
 
     public function form($id) {
         $data['title'] = 'Form Penyerahan';
+        // 1. Ambil keyword dari URL (?keyword=...)
+            $keyword = $this->input->get('keyword');
+            if ($keyword === NULL) {
+                $keyword = '';
+            }
+            
+            // 2. Kirim keyword ke view agar input form tetap terisi
+            $data['keyword'] = $keyword;
+            
+            // 3. Kirim keyword ke model untuk proses filter
         $data['header'] = $this->Transaksi_model->get_header_by_id($id);
         
         if (!$data['header']) {
@@ -91,4 +110,5 @@ class Penyerahan extends MY_Controller {
         // Load view print tanpa header & footer sidebar
         $this->load->view('penyerahan/print_rincian', $data);
     }
+    
 }

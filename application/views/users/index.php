@@ -25,6 +25,7 @@
                                 <th class="text-center" width="120">Username</th>
                                 <th class="text-center" width="120">Nama Lengkap</th>
                                 <th class="text-center" width="120">Hak Akses</th>
+                                <th class="text-center" width="120">Unit / Ruangan</th> <!-- ✅ TAMBAHAN -->
                                 <th class="text-center" width="120">Aksi</th>
                             </tr>
                         </thead>
@@ -35,6 +36,10 @@
                                 <td class="text-left"><strong><?= $row->username ?></strong></td>
                                 <td class="text-left"><?= $row->nama_lengkap ?></td>
                                 <td><span class="badge <?= $row->role == 'admin' ? 'bg-danger' : 'bg-primary' ?>"><?= ucfirst($row->role) ?></span></td>
+                                <td>
+                                    <!-- ✅ TAMBAHAN: Tampilkan nama unit, atau '-' jika kosong -->
+                                    <?= isset($row->nama_pelanggan) ? '<span class="badge bg-secondary">'.$row->nama_pelanggan.'</span>' : '<span class="text-muted">-</span>' ?>
+                                </td>
                                 <td class="text-center">
                                     <a href="<?= base_url('users/edit/'.$row->id) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                                     <a href="<?= base_url('users/delete/'.$row->id) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Hapus user ini?')"><i class="fas fa-trash"></i></a>
