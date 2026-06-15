@@ -5,22 +5,49 @@
     <div class="content-area">
         
         <!-- 🔍 FORM PENCARIAN -->
-        <div class="card mb-3 border-0 shadow-sm">
-            <div class="card-body py-2">
-                <form method="get" action="<?= base_url('penyerahan') ?>" class="row g-2 align-items-center">
-                    <div class="col-md-5 col-12">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
-                            <input type="text" name="keyword" class="form-control" placeholder="Cari No. Transaksi, Pengirim, Penerima, atau Unit..." value="<?= isset($keyword) ? $keyword : '' ?>">
+                <div class="card mb-3 border-0 shadow-sm">
+                <div class="card-body py-3">
+                    <form method="get" action="<?= base_url('penyerahan') ?>" id="formCari" class="row g-2 align-items-center">
+                        <div class="col-md-6 col-12">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+                                <input type="text" name="keyword" id="searchInput" class="form-control" 
+                                       placeholder="Ketik min. 3 karakter (No. Transaksi, Pengirim, Unit...)" 
+                                       value="<?= isset($keyword) ? $keyword : '' ?>" autocomplete="off">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search me-1"></i> Cari</button>
-                        <a href="<?= base_url('penyerahan') ?>" class="btn btn-outline-secondary btn-sm"><i class="fas fa-redo me-1"></i> Reset</a>
-                    </div>
-                </form>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i> Cari
+                            </button>
+                            <a href="<?= base_url('penyerahan') ?>" class="btn btn-outline-secondary">
+                                <i class="fas fa-redo me-1"></i> Reset
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
+
+        <!-- Script untuk Live Search (Otomatis cari saat 3 karakter) -->
+        <script>
+        $(document).ready(function() {
+            var searchTimeout;
+            
+            $('#searchInput').on('keyup', function() {
+                var val = $(this).val();
+                
+                // Jika karakter >= 3, otomatis submit form
+                if (val.length >= 3) {
+                    clearTimeout(searchTimeout); // Hapus timer sebelumnya agar tidak spam
+                    
+                    // Beri jeda 600ms (debounce) sebelum submit, agar server tidak berat
+                    searchTimeout = setTimeout(function() {
+                        $('#formCari').submit();
+                    }, 600); 
+                }
+            });
+        });
+        </script>>
 
         <!-- Pesan Sukses -->
         <?php if ($this->session->flashdata('success')): ?>
@@ -44,7 +71,7 @@
                                 <!-- <th>Penerima</th> -->
                                 <th class="text-center" width="100">Jumlah Awal</th>
                                 <th class="text-center" width="130">Jumlah Diserahkan</th>
-                                <th>Status Serah</th>
+                                <th class="text-center">Status Serah</th>
                                 <th class="text-center" width="180">Aksi</th>
                             </tr>
                         </thead>
@@ -68,11 +95,11 @@
                                 </td>
                                 <td class="text-center">
                                     <!-- Tombol Edit -->
-                                        <a href="<?= base_url('penyerahan/form/'.$row->id) ?>" class="btn btn-warning btn-sm me-1" title="Edit Jumlah Diserahkan">
+                                        <!-- <a href="<?= base_url('penyerahan/form/'.$row->id) ?>" class="btn btn-warning btn-sm me-1" title="Edit Jumlah Diserahkan">
                                             <i class="fas fa-edit"></i>
-                                        </a>
+                                        </a> -->
                                     <?php if ($row->status_serah == 'belum'): ?>
-                                        <a href="<?= base_url('penyerahan/form/'.$row->id) ?>" class="btn btn-warning btn-sm me-1" title="Edit Jumlah">
+                                        <a href="<?= base_url('penyerahan/form/'.$row->id) ?>" class="btn btn-warning btn-sm me-1" title="Edit Jumlah Diserahkan">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="<?= base_url('penyerahan/form/'.$row->id) ?>" class="btn btn-primary btn-sm" title="Proses Serahkan">

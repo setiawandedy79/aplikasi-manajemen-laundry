@@ -40,13 +40,16 @@ class Auth extends CI_Controller {
         $user = $this->User_model->get_by_username($username);
 
         if ($user && password_verify($password, $user->password)) {
-            $this->session->set_userdata([
+            $permissions = $user->permissions ? json_decode($user->permissions, true) : array();
+            $this->session->set_userdata(array(
                 'user_id' => $user->id,
                 'username' => $user->username,
                 'nama_lengkap' => $user->nama_lengkap,
                 'role' => $user->role,
+                'pelanggan_id' => $user->pelanggan_id,
+                'permissions' => $permissions,
                 'logged_in' => TRUE
-            ]);
+            ));
             redirect('dashboard');
         } else {
             $this->session->set_flashdata('error', 'Username atau Password salah!');

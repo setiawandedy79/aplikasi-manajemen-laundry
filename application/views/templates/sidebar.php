@@ -4,75 +4,89 @@
         <small>Professional Laundry Management</small>
     </div>
     <nav class="sidebar-nav">
-        <?php if (is_allowed('dashboard')): ?>
+        <!-- Dashboard -->
+        <?php if (can_view('dashboard')): ?>
         <a href="<?= base_url('dashboard') ?>" class="<?= $this->uri->segment(1) == 'dashboard' ? 'active' : '' ?>">
-            <i class="fas fa-home"></i> Dashboard
+            <i class="fas fa-tachometer-alt"></i> Dashboard
         </a>
         <?php endif; ?>
 
         <div class="nav-section">Master Data</div>
-        <?php if (is_allowed('pakaian')): ?>
+        <!-- Master Linen -->
+        <?php if (can_view('pakaian')): ?>
         <a href="<?= base_url('pakaian') ?>" class="<?= $this->uri->segment(1) == 'pakaian' ? 'active' : '' ?>">
             <i class="fas fa-tshirt"></i> Master Linen
         </a>
         <?php endif; ?>
+
         <?php if (is_allowed('supplier')): ?>
         <a href="<?= base_url('supplier') ?>" class="<?= $this->uri->segment(1) == 'supplier' ? 'active' : '' ?>">
             <i class="fas fa-truck"></i> Master Supplier
         </a>
         <?php endif; ?>
-        <?php if (is_allowed('sabun')): ?>
-        <a href="<?= base_url('sabun') ?>" class="<?= $this->uri->segment(1) == 'sabun' ? 'active' : '' ?>">
-            <i class="fas fa-soap"></i> Master Sabun
+
+        <!-- Master Unit -->
+        <?php if (can_view('pelanggan')): ?>
+        <a href="<?= base_url('pelanggan') ?>" class="<?= $this->uri->segment(1) == 'pelanggan' ? 'active' : '' ?>">
+            <i class="fas fa-hospital"></i> Master Unit
         </a>
         <?php endif; ?>
+
+        <!-- Master Sabun -->
+        <?php if (can_view('sabun')): ?>
+        <a href="<?= base_url('sabun') ?>" class="<?= $this->uri->segment(1) == 'sabun' ? 'active' : '' ?>">
+            <i class="fas fa-flask"></i> Master Sabun
+        </a>
+        <?php endif; ?>
+
         <?php if (is_allowed('satuan_sabun')): ?>
         <a href="<?= base_url('satuan_sabun') ?>" class="<?= $this->uri->segment(1) == 'satuan_sabun' ? 'active' : '' ?>">
             <i class="fas fa-balance-scale"></i> Master Satuan
         </a>
         <?php endif; ?>
-        <?php if (is_allowed('pelanggan')): ?>
-        <a href="<?= base_url('pelanggan') ?>" class="<?= $this->uri->segment(1) == 'pelanggan' ? 'active' : '' ?>">
-            <i class="fas fa-users"></i> Master Pelanggan
-        </a>
-        <?php endif; ?>
-        <?php if (is_allowed('users')): ?>
+        
+        <!-- Master User (Hanya Admin) -->
+        
+        <?php if ($this->session->userdata('role') === 'admin'): ?>
         <a href="<?= base_url('users') ?>" class="<?= $this->uri->segment(1) == 'users' ? 'active' : '' ?>">
-            <i class="fas fa-user-cog"></i> Master User
+            <i class="fas fa-users-cog"></i> Master User
         </a>
         <?php endif; ?>
 
         <div class="nav-section">Operasional</div>
-        <?php if (is_allowed('transaksi')): ?>
+        <!-- Transaksi -->
+        <?php if (can_view('transaksi')): ?>
         <a href="<?= base_url('transaksi') ?>" class="<?= $this->uri->segment(1) == 'transaksi' ? 'active' : '' ?>">
-            <i class="fas fa-receipt"></i> Transaksi Laundry
+            <i class="fas fa-file-invoice"></i> Transaksi
         </a>
         <?php endif; ?>
 
-        <?php if (is_allowed('penyerahan')): ?>
+        <!-- Penyerahan -->
+        <?php if (can_view('penyerahan')): ?>
         <a href="<?= base_url('penyerahan') ?>" class="<?= $this->uri->segment(1) == 'penyerahan' ? 'active' : '' ?>">
-            <i class="fas fa-hand-holding"></i> Penyerahan Laundry
+            <i class="fas fa-hand-holding"></i> Penyerahan
         </a>
         <?php endif; ?>
 
-        <?php if (is_allowed('mutasi')): ?>
+        <!-- Mutasi Stok -->
+        <?php if (can_view('mutasi')): ?>
         <a href="<?= base_url('mutasi') ?>" class="<?= $this->uri->segment(1) == 'mutasi' ? 'active' : '' ?>">
-            <i class="fas fa-truck-loading"></i> Mutasi Masuk Chemical
+            <i class="fas fa-exchange-alt"></i> Mutasi Chemical
         </a>
-        
         <?php endif; ?>
 
-        <?php if (is_allowed('pemakaian')): ?>
+        <!-- Pemakaian Sabun -->
+        <?php if (can_view('pemakaian')): ?>
         <a href="<?= base_url('pemakaian') ?>" class="<?= $this->uri->segment(1) == 'pemakaian' ? 'active' : '' ?>">
-            <i class="fas fa-clock"></i> Pemakaian Chemical
+            <i class="fas fa-chart-line"></i> Pemakaian Chemical
         </a>
-        
         <?php endif; ?>
         
         <div class="nav-section">Laporan</div>
-        <?php if (is_allowed('laporan')): ?>
-        <a href="<?= base_url('laporan') ?>" class="<?= strpos($this->uri->uri_string(), 'laporan') !== false ? 'active' : '' ?>">
-            <i class="fas fa-file-invoice"></i> Menu Laporan
+        <!-- Laporan -->
+        <?php if (can_view('laporan')): ?>
+        <a href="<?= base_url('laporan') ?>" class="<?= $this->uri->segment(1) == 'laporan' ? 'active' : '' ?>">
+            <i class="fas fa-file-alt"></i> Menu Laporan
         </a>
         <?php endif; ?>
 
@@ -82,7 +96,6 @@
             <i class="fas fa-tshirt"></i> Laporan Pengambilan Linen
         </a>
         <?php endif; ?> -->
-
 
         <!-- ✅ MENU BARU: LAPORAN PENGEMBALIAN LINEN -->
         <!-- <?php if (is_allowed('laporan')): ?>
@@ -97,6 +110,7 @@
             <i class="fas fa-chart-line"></i> Rekapitulasi Pencucian Linen
         </a>
         <?php endif; ?> -->
+
         <!-- ✅ MENU BARU: LAPORAN PENGGUNAAN CHEMICAL -->
         <!-- <?php if (is_allowed('laporan')): ?>
         <a href="<?= base_url('laporan/penggunaan_chemical') ?>" class="<?= $this->uri->segment(2) == 'penggunaan_chemical' ? 'active' : '' ?>">

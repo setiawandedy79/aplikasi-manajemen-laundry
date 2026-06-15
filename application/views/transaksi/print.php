@@ -42,50 +42,66 @@
         <tr><td class="label">Nama Pengirim</td><td>: <?= $header->nama_pengirim ?></td><td class="label">Nama Penerima</td><td>: <?= $header->nama_penerima ?></td></tr>
     </table>
 
-    <table class="items">
-        <thead>
-            <tr>
-                <th class="text-center" width="40">No</th>
-                <th class="text-center">Nama Linen</th>
-                <th class="text-center" width="80">Kategori</th>
-                <th class="text-center" width="60">Jumlah</th>
-                <th width="80" class="text-center">Berat (Kg)</th>
-                <th class="text-center" width="60">Status</th>
-                <th class="text-center">Keterangan</th>
-            </tr>
-        </thead>
+            <table class="table-print" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <thead>
+                <tr style="background-color: #f0f0f0; text-align: center; font-weight: bold;">
+                    <th style="border: 1px solid #000; padding: 5px; width: 40px;">No</th>
+                    <th style="border: 1px solid #000; padding: 5px; text-align: center;">Nama Linen</th>
+                    <th style="border: 1px solid #000; padding: 5px; width: 100px;">Kategori</th>
+                    <th style="border: 1px solid #000; padding: 5px; width: 80px;">Status</th>
+                    <th style="border: 1px solid #000; padding: 5px; width: 80px;">Jumlah</th>
+                    <th style="border: 1px solid #000; padding: 5px; width: 100px;">Berat (Kg)</th>
+                    <th style="border: 1px solid #000; padding: 5px; text-align: center;">Keterangan</th>
+                </tr>
+            </thead>
             <tbody>
                 <?php 
-                $no = 1; 
-                $ada_item = false; // Flag untuk cek apakah ada barang yang dicentang
-                foreach ($detail as $d): 
-                    if ($d->ceklis == 1): //  Hanya proses jika dicentang
-                        $ada_item = true;
+                $list_detail = isset($details) ? $details : (isset($detail) ? $detail : []);
+                
+                $no = 1;
+                $total_qty = 0; 
+                $total_kg = 0; 
+                
+                if (!empty($list_detail)): 
+                    foreach ($list_detail as $d): 
+                        $total_qty += isset($d->jumlah) ? (int)$d->jumlah : 0;
+                        $total_kg  += isset($d->jumlah_kg) ? (float)$d->jumlah_kg : 0.00;
                 ?>
                 <tr>
-                    <td class="text-center"><?= $no++ ?></td>
-                    <td><?= $d->nama_pakaian ?></td>
-                    <td class="text-center"><?= $d->kategori ?></td>
-                    <td class="text-center"><?= $d->jumlah > 0 ? $d->jumlah : '-' ?></td>
-                    <td class="text-center"><?= isset($d->jumlah_kg) ? number_format($d->jumlah_kg, 2) : '0.00' ?> Kg</td>
-                    <td class="text-center">☑️</td>
-                    <td><?= $d->keterangan ?: '-' ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= $no++ ?></td>
+                    <td style="border: 1px solid #000; padding: 5px;"><?= isset($d->nama_pakaian) ? $d->nama_pakaian : '-' ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= isset($d->kategori) ? $d->kategori : '-' ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                        <?= (isset($d->ceklis) && $d->ceklis == 1) ? 'Ya' : 'Tidak' ?>
+                    </td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center; font-weight: bold;">
+                        <?= isset($d->jumlah) ? $d->jumlah : 0 ?>
+                    </td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;">
+                        <?= isset($d->jumlah_kg) ? number_format($d->jumlah_kg, 2) : '0.00' ?>
+                    </td>
+                    <td style="border: 1px solid #000; padding: 5px;"><?= isset($d->keterangan) ? $d->keterangan : '-' ?></td>
                 </tr>
                 <?php 
-                    endif; 
-                endforeach; 
-                
-                // Tampilkan pesan jika tidak ada barang yang dicentang
-                if (!$ada_item): 
+                    endforeach; 
+                else: 
                 ?>
                 <tr>
-                    <td colspan="6" class="text-center py-3" style="color: #666; font-style: italic;">
-                        Tidak ada barang yang dipilih/dicentang pada transaksi ini.
-                    </td>
+                    <td colspan="7" style="border: 1px solid #000; padding: 10px; text-align: center;">Tidak ada detail item</td>
                 </tr>
                 <?php endif; ?>
             </tbody>
-    </table>
+            
+            <!-- Baris Total untuk Print -->
+            <tfoot>
+                <tr style="background-color: #f9f9f9; font-weight: bold;">
+                    <td colspan="4" style="border: 1px solid #000; padding: 5px; text-align: right;">TOTAL KESELURUHAN</td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= $total_qty ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= number_format($total_kg, 2) ?></td>
+                    <td style="border: 1px solid #000; padding: 5px;"></td>
+                </tr>
+            </tfoot>
+        </table>
 
     <div class="footer">
         <div class="signature">

@@ -13,15 +13,20 @@ class Penyerahan extends MY_Controller {
 
     public function index() {
         $data['title'] = 'Penyerahan Laundry';
+        $keyword = $this->input->get('keyword');
+            if ($keyword === NULL) {
+            $keyword = '';
+        }
         // 1. Ambil data user yang sedang login
             $user_id = $this->session->userdata('user_id');
             $user_data = $this->db->where('id', $user_id)->get('users')->row();
             
         // 2. Ambil pelanggan_id-nya (Jika NULL, berarti Admin yang bisa lihat semua)
             $pelanggan_id = isset($user_data->pelanggan_id) ? $user_data->pelanggan_id : null;
+            $data['keyword'] = $keyword;
             
         // 3. Kirim pelanggan_id ke model untuk proses filter
-            $data['transaksi'] = $this->Transaksi_model->get_list_penyerahan($pelanggan_id);
+            $data['transaksi'] = $this->Transaksi_model->get_list_penyerahan($keyword, $pelanggan_id);
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar');

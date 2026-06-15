@@ -42,8 +42,9 @@
                                 <label class="form-label fw-500">Shift <span class="text-danger">*</span></label>
                                 <select name="shift" class="form-select" required>
                                     <option value="">Pilih Shift</option>
-                                    <option value="pagi" <?= (isset($header) && $header->shift == 'pagi') ? 'selected' : '' ?>>Pagi (06:00 - 10:00)</option>
-                                    <option value="siang" <?= (isset($header) && $header->shift == 'siang') ? 'selected' : '' ?>>Siang (14:00 - 19:00)</option>
+                                    <option value="pagi" <?= (isset($header) && $header->shift == 'pagi') ? 'selected' : '' ?>>Pagi (09.00 - 09.30)</option>
+                                    <option value="siang" <?= (isset($header) && $header->shift == 'siang') ? 'selected' : '' ?>>Siang (15.00 - 15.30)</option>
+                                    <option value="Malam" <?= (isset($header->shift) && strtolower($header->shift) == 'malam') ? 'selected' : '' ?>>Malam (05.00 - 05.30)</option>
                                 </select>
                             </div>
                            

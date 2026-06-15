@@ -27,6 +27,28 @@
                 </a>
             </div>
             <div class="col-md-6 mb-3">
+                <a href="<?= base_url('laporan/penggunaan_chemical') ?>" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-shadow">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-file-alt fa-3x text-info mb-3"></i>
+                            <h5 class="fw-bold">Laporan Penggunaan Chemical</h5>
+                            <p class="text-muted mb-0">Rekap semua transaksi penggunaan chemical</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 mb-3">
+                <a href="<?= base_url('laporan/rekapitulasi_chemical') ?>" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-shadow">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-file-alt fa-3x text-info mb-3"></i>
+                            <h5 class="fw-bold">Rekapitulasi Penggunaan Chemical</h5>
+                            <p class="text-muted mb-0">Rekap semua transaksi penggunaan chemical</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 mb-3">
                 <a href="<?= base_url('laporan/stok_sabun') ?>" class="text-decoration-none">
                     <div class="card h-100 border-0 shadow-sm hover-shadow">
                         <div class="card-body text-center p-4">
@@ -81,28 +103,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-md-6 mb-3">
-                <a href="<?= base_url('laporan/penggunaan_chemical') ?>" class="text-decoration-none">
-                    <div class="card h-100 border-0 shadow-sm hover-shadow">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-file-alt fa-3x text-info mb-3"></i>
-                            <h5 class="fw-bold">Laporan Penggunaan Chemical</h5>
-                            <p class="text-muted mb-0">Rekap semua transaksi penggunaan chemical</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-6 mb-3">
-                <a href="<?= base_url('laporan/rekapitulasi_chemical') ?>" class="text-decoration-none">
-                    <div class="card h-100 border-0 shadow-sm hover-shadow">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-file-alt fa-3x text-info mb-3"></i>
-                            <h5 class="fw-bold">Rekapitulasi Penggunaan Chemical</h5>
-                            <p class="text-muted mb-0">Rekap semua transaksi penggunaan chemical</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
+            
         </div>
     </div>
 </div>

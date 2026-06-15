@@ -14,9 +14,16 @@ class Transaksi extends MY_Controller {
     }
 
     public function index() {
+        // Cek hak akses view
+            if (!can_view('transaksi')) {
+                $this->session->set_flashdata('error', 'Anda tidak memiliki hak akses untuk melihat halaman ini');
+                redirect('dashboard');
+            }
         $data['title'] = 'Transaksi Laundry';
         $keyword = $this->input->get('keyword');
-        
+            if ($keyword === NULL) {
+            $keyword = '';
+        }
         // 1. Ambil data user yang sedang login
             $user_id = $this->session->userdata('user_id');
             $user_data = $this->db->where('id', $user_id)->get('users')->row();
@@ -36,6 +43,11 @@ class Transaksi extends MY_Controller {
     }
 
     public function edit($id) {
+        // Cek hak akses edit
+            if (!can_edit('transaksi')) {
+                $this->session->set_flashdata('error', 'Anda tidak memiliki hak akses untuk mengedit data');
+                redirect('transaksi');
+            }
         $data['title'] = 'Edit Transaksi';
         $data['header'] = $this->Transaksi_model->get_header_by_id($id);
         if (!$data['header']) {
@@ -84,6 +96,11 @@ public function update($id) {
     }
 
     public function add() {
+        // Cek hak akses add
+            if (!can_add('transaksi')) {
+                $this->session->set_flashdata('error', 'Anda tidak memiliki hak akses untuk menambah data');
+                redirect('transaksi');
+            }
         $data['title'] = 'Tambah Transaksi';
         $data['pakaian'] = $this->Pakaian_model->get_all();
         $data['pelanggan'] = $this->Pelanggan_model->get_all();
@@ -120,6 +137,11 @@ public function update($id) {
     }
 
     public function delete($id) {
+        // Cek hak akses delete
+            if (!can_delete('transaksi')) {
+                $this->session->set_flashdata('error', 'Anda tidak memiliki hak akses untuk menghapus data');
+                redirect('transaksi');
+            }
         $this->load->model('Activity_log_model');
 
     // 1. AMBIL DATA LAMA SEBELUM DIHAPUS

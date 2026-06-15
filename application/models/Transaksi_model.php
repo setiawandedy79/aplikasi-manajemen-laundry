@@ -178,7 +178,7 @@ class Transaksi_model extends CI_Model {
         return $this->db->get('transaksi_header')->result();
     }
 
-    public function get_list_penyerahan($pelanggan_id = null) {
+    public function get_list_penyerahan($keyword = '', $pelanggan_id = null) {
         $this->db->select('
             transaksi_header.*,
             pelanggan.nama as nama_pelanggan,
@@ -189,9 +189,19 @@ class Transaksi_model extends CI_Model {
         $this->db->join('pelanggan', 'pelanggan.id = transaksi_header.pelanggan_id', 'left');
         $this->db->join('transaksi_detail', 'transaksi_detail.transaksi_id = transaksi_header.id', 'left');
 
-        // 🔒 FILTER: Jika user punya pelanggan_id, tampilkan hanya transaksi unit tersebut
+        // 🔒 FILTER UNIT (Hanya tampilkan data unit user yang login)
         if (!empty($pelanggan_id)) {
             $this->db->where('transaksi_header.pelanggan_id', $pelanggan_id);
+        }
+
+        // 🔍 LOGIC SEARCH (Pencarian berdasarkan No Transaksi, Pengirim, Penerima, Unit)
+        if (!empty($keyword)) {
+            $this->db->group_start();
+            $this->db->like('transaksi_header.no_transaksi', $keyword);
+            $this->db->or_like('transaksi_header.nama_pengirim', $keyword);
+            $this->db->or_like('transaksi_header.nama_penerima', $keyword);
+            $this->db->or_like('pelanggan.nama', $keyword);
+            $this->db->group_end();
         }
 
         // Urutkan: yang belum diserahkan di atas, lalu berdasarkan tanggal terbaru
