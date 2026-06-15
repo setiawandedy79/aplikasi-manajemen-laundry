@@ -46,41 +46,43 @@ class Pemakaian extends MY_Controller {
         $this->load->view('templates/footer');
     }
 
+    // ✅ METHOD UPDATE YANG BENAR
     public function update($id) {
         $this->load->model('Activity_log_model');
-    // 1. AMBIL DATA LAMA SEBELUM DIHAPUS
-        $old_data = $this->Pemakaian_model->get_header_by_id($id);
-
-    // 2. PROSES HAPUS
-        $this->Pemakaian_model->delete($id);
-
-    // 3. CATAT KE LOG (new_data kosong karena dihapus)
-        $this->Activity_log_model->add_log('pemakaian', 'DELETE', $id, $old_data, null);
-
-        $this->session->set_flashdata('success', 'Data berhasil dihapus');
+        
+        // 1. AMBIL DATA LAMA SEBELUM DIUPDATE (untuk log)
+        $old_data = $this->Pemakaian_model->get_by_id($id); // ✅ Sudah diperbaiki
+        
+        // 2. PROSES UPDATE KE DATABASE
+        if ($this->Pemakaian_model->update($id)) {
+            // 3. AMBIL DATA BARU DARI INPUT POST (untuk log)
+            $new_data = $this->input->post();
+            
+            // 4. CATAT KE LOG SEBAGAI "UPDATE"
+            $this->Activity_log_model->add_log('pemakaian', 'UPDATE', $id, $old_data, $new_data);
+            
+            $this->session->set_flashdata('success', 'Data berhasil diupdate & stok disesuaikan');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal! Stok tidak mencukupi untuk koreksi');
+        }
+        
         redirect('pemakaian');
-        // if ($this->Pemakaian_model->update($id)) {
-        //     $this->session->set_flashdata('success', 'Data berhasil diupdate');
-        // } else {
-        //     $this->session->set_flashdata('error', 'Gagal! Stok tidak mencukupi untuk koreksi');
-        // }
-        // redirect('pemakaian');
     }
 
+    // ✅ METHOD DELETE YANG BENAR
     public function delete($id) {
+        $this->load->model('Activity_log_model');
+        
         // 1. AMBIL DATA LAMA SEBELUM DIHAPUS
-            $old_data = $this->Pemakaian_model->get_header_by_id($id);
-
+        $old_data = $this->Pemakaian_model->get_by_id($id); // ✅ Sudah diperbaiki
+        
         // 2. PROSES HAPUS
-            $this->Pemakaian_model->delete($id);
-
-        // 3. CATAT KE LOG (new_data kosong karena dihapus)
-            $this->Activity_log_model->add_log('pemakaian', 'DELETE', $id, $old_data, null);
-
-            $this->session->set_flashdata('success', 'Data berhasil dihapus');
-            redirect('pemakaian');
-        // $this->Pemakaian_model->delete($id);
-        // $this->session->set_flashdata('success', 'Data dihapus & stok dikembalikan');
-        // redirect('pemakaian');
+        $this->Pemakaian_model->delete($id);
+        
+        // 3. CATAT KE LOG SEBAGAI "DELETE"
+        $this->Activity_log_model->add_log('pemakaian', 'DELETE', $id, $old_data, null);
+        
+        $this->session->set_flashdata('success', 'Data berhasil dihapus & stok dikembalikan');
+        redirect('pemakaian');
     }
 }
