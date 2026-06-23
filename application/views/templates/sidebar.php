@@ -53,6 +53,24 @@
         </a>
         <?php endif; ?>
 
+       
+        <!-- Menu Backup Database (Hanya Admin) -->
+        <!-- <?php if ($this->session->userdata('role') === 'admin'): ?>
+            <div class="nav-section mt-3">Administrasi</div>
+
+            <a href="<?= base_url('backup') ?>" class="<?= $this->uri->segment(1) == 'backup' ? 'active' : '' ?>">
+                <i class="fas fa-database"></i> Backup Database
+            </a>
+            
+        <?php endif; ?> -->
+
+           <!-- Stok Opname -->
+        <?php if (can_view('stok_opname') || $this->session->userdata('role') === 'admin'): ?>
+        <a href="<?= base_url('stok_opname') ?>" class="<?= $this->uri->segment(1) == 'stok_opname' ? 'active' : '' ?>">
+            <i class="fas fa-clipboard-check"></i> Stok Opname
+        </a>
+        <?php endif; ?>
+
         <div class="nav-section">Operasional</div>
         <!-- Transaksi -->
         <?php if (can_view('transaksi')): ?>

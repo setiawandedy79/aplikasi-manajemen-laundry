@@ -14,20 +14,58 @@ class Penyerahan extends MY_Controller {
     public function index() {
         $data['title'] = 'Penyerahan Laundry';
         $keyword = $this->input->get('keyword');
-            if ($keyword === NULL) {
-            $keyword = '';
-        }
-        // 1. Ambil data user yang sedang login
-            $user_id = $this->session->userdata('user_id');
-            $user_data = $this->db->where('id', $user_id)->get('users')->row();
-            
-        // 2. Ambil pelanggan_id-nya (Jika NULL, berarti Admin yang bisa lihat semua)
-            $pelanggan_id = isset($user_data->pelanggan_id) ? $user_data->pelanggan_id : null;
-            $data['keyword'] = $keyword;
-            
-        // 3. Kirim pelanggan_id ke model untuk proses filter
-            $data['transaksi'] = $this->Transaksi_model->get_list_penyerahan($keyword, $pelanggan_id);
+        if ($keyword === NULL) $keyword = '';
+        $data['keyword'] = $keyword;
+        
+        $user_id = $this->session->userdata('user_id');
+        $user_data = $this->db->where('id', $user_id)->get('users')->row();
+        $pelanggan_id = isset($user_data->pelanggan_id) ? $user_data->pelanggan_id : null;
+        
+        // --- KONFIGURASI PAGINATION ---
+        $this->load->library('pagination');
+        $config['base_url'] = base_url('penyerahan/index');
+        $config['total_rows'] = $this->Transaksi_model->count_list_penyerahan($keyword, $pelanggan_id);
+        $config['per_page'] = 50;
+        $config['uri_segment'] = 3;
+        
+        // Styling (Sama seperti di atas)
+        $config['full_tag_open'] = '<ul class="pagination justify-content-center mt-3">';
+        $config['full_tag_close'] = '</ul>';
+        $config['first_link'] = 'First';
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tag_close'] = '</li>';
+        $config['last_link'] = 'Last';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tag_close'] = '</li>';
+        $config['next_link'] = '&raquo;';
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tag_close'] = '</li>';
+        $config['prev_link'] = '&laquo;';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['num_tag_open'] = '<li class="page-item">';
+        $config['num_tag_close'] = '</li>';
+        $config['attributes'] = array('class' => 'page-link');
+        // --------------------------------
 
+        $this->pagination->initialize($config);
+        
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+
+        // ✅ TAMBAHKAN BARIS INI DI KETIGA CONTROLLER
+        $data['no'] = $page + 1;
+        
+        // ✅ FIX: Mencegah error ctype_digit() null di PHP 8.1
+        // Memaksa segment ke-3 bernilai '0' jika kosong, agar tidak error di create_links()
+        if ($this->uri->segment(3) === NULL) {
+            $this->uri->segments[3] = '0';
+        }
+        $data['links'] = $this->pagination->create_links();
+        
+        $data['transaksi'] = $this->Transaksi_model->get_list_penyerahan($keyword, $pelanggan_id, $config['per_page'], $page);
+        
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar');
         $this->load->view('penyerahan/index', $data);

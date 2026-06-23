@@ -46,7 +46,23 @@ class Laporan extends MY_Controller {
 
     public function stok_sabun() {
         $data['title'] = 'Laporan Stok Sabun';
+        
+        // 1. Ambil parameter tanggal dari URL
+        $dari = $this->input->get('dari');
+        $sampai = $this->input->get('sampai');
+        
+        // 2. Default ke bulan ini jika kosong
+        if (empty($dari) || empty($sampai)) {
+            $dari = date('Y-m-01'); // Tanggal 1 bulan ini
+            $sampai = date('Y-m-t'); // Tanggal terakhir bulan ini
+        }
+        
+        $data['dari'] = $dari;
+        $data['sampai'] = $sampai;
+        
+        // 3. Ambil data sabun
         $data['sabun'] = $this->Laporan_model->get_stok_sabun();
+        
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar');
         $this->load->view('laporan/stok_sabun', $data);

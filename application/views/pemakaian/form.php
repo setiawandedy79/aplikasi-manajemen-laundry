@@ -18,8 +18,8 @@
                                 <label class="form-label fw-500">Shift <span class="text-danger">*</span></label>
                                 <select name="shift" class="form-select" required>
                                     <option value="">Pilih Shift</option>
-                                    <option value="pagi" <?= ($row->shift ?? '') == 'pagi' ? 'selected' : '' ?>>Pagi (06:00 - 14:00)</option>
-                                    <option value="siang" <?= ($row->shift ?? '') == 'siang' ? 'selected' : '' ?>>Siang (14:00 - 22:00)</option>
+                                    <option value="pagi" <?= ($row->shift ?? '') == 'pagi' ? 'selected' : '' ?>>Pagi (06:00 - 13:00)</option>
+                                    <option value="siang" <?= ($row->shift ?? '') == 'siang' ? 'selected' : '' ?>>Siang (13:00 - 20:00)</option>
                                 </select>
                             </div>
                         </div>

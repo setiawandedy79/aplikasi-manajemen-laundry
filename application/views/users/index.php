@@ -28,11 +28,11 @@
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>No</th>
-                                <th>Nama Lengkap</th>
-                                <th>Username</th>
-                                <th>Role</th>
-                                <th>Unit</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Nama Lengkap</th>
+                                <th class="text-center">Username</th>
+                                <th class="text-center">Role</th>
+                                <th class="text-center">Unit</th>
                                 <th class="text-center" width="180">Aksi</th>
                             </tr>
                         </thead>
@@ -40,7 +40,7 @@
                             <?php $no = 1; foreach ($users as $row): ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td class="fw-semibold"><?= isset($row->nama_lengkap) ? $row->nama_lengkap : '-' ?></td>
+                                <td class="text-left"; class="fw-semibold"><?= isset($row->nama_lengkap) ? $row->nama_lengkap : '-' ?></td>
                                 <td><?= isset($row->username) ? $row->username : '-' ?></td>
                                 <td><span class="badge bg-info"><?= isset($row->role) ? ucfirst($row->role) : '-' ?></span></td>
                                 <td>

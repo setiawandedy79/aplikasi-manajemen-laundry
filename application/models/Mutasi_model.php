@@ -3,7 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mutasi_model extends CI_Model {
 
-    public function get_all() {
+    // 1. Method untuk menghitung total data
+    public function count_all() {
+        return $this->db->count_all('mutasi_sabun_masuk');
+    }
+
+    // 2. Method get_all dengan Pagination
+    public function get_all($limit = null, $offset = null) {
         $this->db->select('mutasi_sabun_masuk.*, sabun.nama_sabun, satuan_sabun.nama_satuan, users.nama_lengkap');
         $this->db->from('mutasi_sabun_masuk');
         $this->db->join('sabun', 'sabun.id = mutasi_sabun_masuk.sabun_id', 'left');
@@ -11,6 +17,11 @@ class Mutasi_model extends CI_Model {
         $this->db->join('users', 'users.id = mutasi_sabun_masuk.user_id', 'left');
         $this->db->order_by('mutasi_sabun_masuk.tanggal', 'DESC');
         $this->db->order_by('mutasi_sabun_masuk.created_at', 'DESC');
+        
+        if ($limit !== null) {
+            $this->db->limit($limit, $offset);
+        }
+        
         return $this->db->get()->result();
     }
 

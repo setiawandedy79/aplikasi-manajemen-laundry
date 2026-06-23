@@ -3,13 +3,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Pemakaian_model extends CI_Model {
 
-    public function get_all() {
+    // 1. Method untuk menghitung total data
+    public function count_all() {
+        return $this->db->count_all('pemakaian_sabun');
+    }
+
+    // 2. Method get_all dengan Pagination
+    public function get_all($limit = null, $offset = null) {
         $this->db->select('pemakaian_sabun.*, sabun.nama_sabun, satuan_sabun.nama_satuan, users.nama_lengkap');
         $this->db->from('pemakaian_sabun');
         $this->db->join('sabun', 'sabun.id = pemakaian_sabun.sabun_id', 'left');
         $this->db->join('satuan_sabun', 'satuan_sabun.id = sabun.satuan_id', 'left');
         $this->db->join('users', 'users.id = pemakaian_sabun.user_id', 'left');
         $this->db->order_by('pemakaian_sabun.created_at', 'DESC');
+        
+        if ($limit !== null) {
+            $this->db->limit($limit, $offset);
+        }
+        
         return $this->db->get()->result();
     }
 

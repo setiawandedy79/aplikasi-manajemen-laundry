@@ -183,7 +183,8 @@
         }
         .badge-shift-pagi { background: #fbbf24; color: #1e293b; }
         .badge-shift-siang { background: #3b82f6; color: white; }
-        .table-checklist { width: 60px; text-align: center; }
+        /*.table-checklist { width: 60px; text-align: center; }*/
+        .table-checklist { width: 60px; }
         @media print {
             .sidebar, .topbar, .no-print { display: none !important; }
             .main-content { margin-left: 0 !important; }
