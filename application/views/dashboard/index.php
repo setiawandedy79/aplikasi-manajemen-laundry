@@ -35,9 +35,9 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0 fw-bold"><i class="fas fa-clock me-2 text-primary"></i>Transaksi Terbaru</h6>
-                        <a href="<?= base_url('transaksi/add') ?>" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus me-1"></i> Transaksi Baru
+                        <h6 class="mb-0 fw-bold"><i class="fas fa-clock me-2 text-primary"></i>Transaksi</h6>
+                        <a href="<?= base_url('transaksi') ?>" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus me-1"></i> Transaksi
                         </a>
                     </div>
                     <div class="card-body p-0">

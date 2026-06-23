@@ -60,6 +60,17 @@
                 </a>
             </div>
             <div class="col-md-6 mb-3">
+                <a href="<?= base_url('laporan/kartu_stok') ?>" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm hover-shadow">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-boxes fa-3x text-warning mb-3"></i>
+                            <h5 class="fw-bold">Kartu Stok Chemical</h5>
+                            <p class="text-muted mb-0">Stok awal, pemakaian & stok akhir</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 mb-3">
                 <a href="<?= base_url('laporan/transaksi') ?>" class="text-decoration-none">
                     <div class="card h-100 border-0 shadow-sm hover-shadow">
                         <div class="card-body text-center p-4">

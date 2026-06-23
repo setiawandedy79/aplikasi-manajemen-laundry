@@ -71,6 +71,7 @@
         </a>
         <?php endif; ?>
 
+
         <div class="nav-section">Operasional</div>
         <!-- Transaksi -->
         <?php if (can_view('transaksi')): ?>
@@ -140,6 +141,13 @@
        <!--  <?php if (is_allowed('laporan')): ?>
         <a href="<?= base_url('laporan/rekapitulasi_chemical') ?>" class="<?= $this->uri->segment(2) == 'rekapitulasi_chemical' ? 'active' : '' ?>">
             <i class="fas fa-chart-bar"></i> Rekapitulasi Chemical
+        </a>
+        <?php endif; ?> -->
+
+        <!-- Kartu Stok Tambahkan di dalam section Laporan -->
+        <!-- <?php if (is_allowed('laporan')): ?>
+        <a href="<?= base_url('laporan/kartu_stok') ?>" class="<?= $this->uri->segment(2) == 'kartu_stok' ? 'active' : '' ?>">
+            <i class="fas fa-clipboard-list me-2"></i> Kartu Stok Chemical
         </a>
         <?php endif; ?> -->
 

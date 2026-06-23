@@ -482,4 +482,27 @@ class Laporan extends MY_Controller {
 
         $this->load->view('laporan/print_rekapitulasi_chemical', $data);
     }
+
+    public function kartu_stok() {
+        $data['title'] = 'Kartu Stok Chemical (Terperinci)';
+        $dari = $this->input->get('dari') ?: date('Y-m-01');
+        $sampai = $this->input->get('sampai') ?: date('Y-m-t');
+        
+        $data['dari'] = $dari;
+        $data['sampai'] = $sampai;
+        $data['sabun_list'] = $this->Laporan_model->get_stok_sabun(); // Ambil semua daftar chemical
+        
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar');
+        $this->load->view('laporan/kartu_stok', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function print_kartu_stok() {
+        $data['dari'] = $this->input->get('dari') ?: date('Y-m-01');
+        $data['sampai'] = $this->input->get('sampai') ?: date('Y-m-t');
+        $data['sabun_list'] = $this->Laporan_model->get_stok_sabun();
+        
+        $this->load->view('laporan/print_kartu_stok', $data);
+    }
 }

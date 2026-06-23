@@ -77,4 +77,55 @@ class Laporan_model extends CI_Model {
         $stok_baru = $sabun->stok_akhir - $data['jumlah'];
         $this->db->where('id', $data['sabun_id'])->update('sabun', ['stok_akhir' => $stok_baru]);
     }
+
+        /**
+     * Mengambil riwayat mutasi & pemakaian untuk 1 chemical dalam rentang tanggal
+     */
+    public function get_transaksi_stok($sabun_id, $dari, $sampai) {
+        // 1. Ambil Mutasi Masuk
+        $mutasi = $this->db->select("tanggal, jumlah as masuk, 0 as keluar, 'Mutasi Masuk' as keterangan")
+                           ->from('mutasi_sabun_masuk')
+                           ->where('sabun_id', $sabun_id)
+                           ->where('tanggal >=', $dari)
+                           ->where('tanggal <=', $sampai)
+                           ->get()->result();
+
+        // 2. Ambil Pemakaian
+        $pakai = $this->db->select("tanggal, 0 as masuk, jumlah as keluar, CONCAT('Pemakaian Shift ', shift) as keterangan")
+                          ->from('pemakaian_sabun')
+                          ->where('sabun_id', $sabun_id)
+                          ->where('tanggal >=', $dari)
+                          ->where('tanggal <=', $sampai)
+                          ->get()->result();
+
+        // 3. Gabungkan dan urutkan berdasarkan tanggal
+        $all_transaksi = array_merge($mutasi, $pakai);
+        usort($all_transaksi, function($a, $b) {
+            return strtotime($a->tanggal) - strtotime($b->tanggal);
+        });
+
+        return $all_transaksi;
+    }
+
+    /**
+     * Menghitung Saldo Awal (Stok sebelum tanggal 'dari')
+     */
+    public function hitung_saldo_awal($sabun_id, $dari) {
+        $sabun = $this->db->where('id', $sabun_id)->get('sabun')->row();
+        $stok_awal_db = $sabun ? (float)$sabun->stok_awal : 0;
+
+        // Total mutasi masuk sebelum periode
+        $masuk_sebelum = $this->db->select('COALESCE(SUM(jumlah),0) as total')
+                                  ->where('sabun_id', $sabun_id)
+                                  ->where('tanggal <', $dari)
+                                  ->get('mutasi_sabun_masuk')->row()->total;
+
+        // Total pemakaian sebelum periode
+        $pakai_sebelum = $this->db->select('COALESCE(SUM(jumlah),0) as total')
+                                  ->where('sabun_id', $sabun_id)
+                                  ->where('tanggal <', $dari)
+                                  ->get('pemakaian_sabun')->row()->total;
+
+        return $stok_awal_db + (float)$masuk_sebelum - (float)$pakai_sebelum;
+    }
 }
