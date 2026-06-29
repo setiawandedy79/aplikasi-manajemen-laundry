@@ -84,7 +84,7 @@
                                     'pemakaian' => 'Pemakaian Sabun',
                                     'mutasi' => 'Mutasi Stok',
                                     'laporan' => 'Laporan',
-                                    'users' => 'Master User'
+                                    'user' => 'Master User'
                                 );
                                 
                                 $actions = array('view', 'add', 'edit', 'delete');

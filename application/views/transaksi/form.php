@@ -5,7 +5,7 @@
     <div class="content-area">
         <!-- SATU FORM UTAMA UNTUK SEMUA INPUT -->
         <!-- <form action="<?= base_url('transaksi/save') ?>" method="post"> -->
-            <form action="<?= base_url(isset($is_edit) && $is_edit ? 'transaksi/update/'.$transaksi_id : 'transaksi/save') ?>" method="post">  
+            <form action="<?= base_url(isset($is_edit) && $is_edit ? 'transaksi/update/'.$transaksi_id : 'transaksi/save') ?>" method="post" onsubmit="return lockButton()>  
 
             <!-- Bagian Header -->
             <div class="card">
@@ -51,13 +51,29 @@
                         </div>
                         <div class="col-md-3">
                             <div class="mb-3">
-                                <label class="form-label fw-500">Pelanggan</label>
-                                <select name="pelanggan_id" class="form-select">
-                                    <option value="">Pilih Pelanggan</option>
-                                    <?php foreach ($pelanggan as $p): ?>
-                                    <option value="<?= $p->id ?>" <?= (isset($header) && $header->pelanggan_id == $p->id) ? 'selected' : '' ?>><?= $p->nama ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                                <label class="form-label">Unit / Ruangan <span class="text-danger">*</span></label>
+    
+                                <?php if (!empty($user_pelanggan_id)): ?>
+                                    <!-- ✅ KONDISI 1: User terikat unit (Kasir/Operator Unit) -->
+                                    <!-- Tampilkan nama unit sebagai teks biasa agar tidak bisa diganti -->
+                                    <input type="text" class="form-control bg-light" value="<?= $user_pelanggan_nama ?>" readonly>
+                                    
+                                    <!-- Kirim ID unit secara tersembunyi (Hidden) agar tersimpan di database -->
+                                    <input type="hidden" name="pelanggan_id" value="<?= $user_pelanggan_id ?>">
+                                    <small class="text-muted"><i class="fas fa-lock me-1"></i>Unit terkunci otomatis sesuai akun login Anda.</small>
+                                    
+                                <?php else: ?>
+                                    <!-- ✅ KONDISI 2: User Admin (Tidak terikat unit) -->
+                                    <!-- Tampilkan dropdown penuh untuk memilih unit mana saja -->
+                                    <select name="pelanggan_id" class="form-select" required>
+                                        <option value="">-- Pilih Unit / Ruangan --</option>
+                                        <?php if (!empty($pelanggan)): ?>
+                                            <?php foreach ($pelanggan as $p): ?>
+                                                <option value="<?= $p->id ?>"><?= $p->nama ?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -185,6 +201,14 @@
                     <a href="<?= base_url('transaksi') ?>" class="btn btn-secondary">
                         <i class="fas fa-arrow-left me-1"></i> Kembali
                     </a>
+                    <script>
+                    function lockButton() {
+                        var btn = document.getElementById('btnSimpan');
+                        btn.disabled = true; 
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Menyimpan...'; 
+                        return true; 
+                    }
+                    </script>
             </div>
             <!-- <div class="mt-3 d-flex gap-2">
                 <button type="submit" class="btn btn-primary">

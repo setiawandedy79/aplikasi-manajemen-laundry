@@ -130,18 +130,33 @@ public function update($id) {
 
     public function add() {
         // Cek hak akses add
-            if (!can_add('transaksi')) {
-                $this->session->set_flashdata('error', 'Anda tidak memiliki hak akses untuk menambah data');
-                redirect('transaksi');
-            }
-        $data['title'] = 'Tambah Transaksi';
-        $data['pakaian'] = $this->Pakaian_model->get_all();
-        $data['pelanggan'] = $this->Pelanggan_model->get_all();
-        $data['no_transaksi'] = $this->Transaksi_model->generate_no();
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar');
-        $this->load->view('transaksi/form', $data);
-        $this->load->view('templates/footer');
+    if (!can_add('transaksi')) {
+        $this->session->set_flashdata('error', 'Anda tidak memiliki hak akses untuk menambah data');
+        redirect('transaksi');
+    }
+    
+    $data['title'] = 'Tambah Transaksi';
+    $data['pakaian'] = $this->Pakaian_model->get_all();
+    $data['pelanggan'] = $this->Pelanggan_model->get_all();
+    $data['no_transaksi'] = $this->Transaksi_model->generate_no();
+
+    // ✅ LOGIC BARU: Cek Unit User dari Session
+    $user_pelanggan_id = $this->session->userdata('pelanggan_id');
+    $data['user_pelanggan_id'] = $user_pelanggan_id;
+    $data['user_pelanggan_nama'] = '';
+
+    // Jika user terikat unit, ambil nama unitnya untuk ditampilkan
+    if (!empty($user_pelanggan_id)) {
+        $unit = $this->db->where('id', $user_pelanggan_id)->get('pelanggan')->row();
+        if ($unit) {
+            $data['user_pelanggan_nama'] = $unit->nama;
+        }
+    }
+
+    $this->load->view('templates/header', $data);
+    $this->load->view('templates/sidebar');
+    $this->load->view('transaksi/form', $data);
+    $this->load->view('templates/footer');
     }
 
     public function save() {
@@ -170,6 +185,7 @@ public function update($id) {
     }
 
     public function delete($id) {
+        
         // Cek hak akses delete
             if (!can_delete('transaksi')) {
                 $this->session->set_flashdata('error', 'Anda tidak memiliki hak akses untuk menghapus data');

@@ -92,59 +92,97 @@ class Transaksi_model extends CI_Model {
 
         }
 
-    public function generate_no() {
-        $prefix = 'MLP';
-        $date   = date('Ymd');
-        $this->db->like('no_transaksi', $prefix . $date);
-        $this->db->order_by('id', 'DESC');
-        $last = $this->db->get('transaksi_header')->row();
-        
-        if ($last) {
-            $num = (int) substr($last->no_transaksi, -4) + 1;
-        } else {
-            $num = 1;
+            /**
+         * Generate Nomor Transaksi Otomatis
+         * Format: MLP + YYYYMMDD + 3 digit nomor urut (001, 002, dst)
+         * Contoh: MLP20260629001, MLP20260629002
+         */
+        public function generate_no() {
+            // 1. Ambil tanggal hari ini dalam format YYYYMMDD
+            $tanggal = date('Ymd'); // Contoh: 20260629
+            $prefix = 'MLP' . $tanggal; // Contoh: MLP20260629
+            
+            // 2. Cari nomor transaksi TERAKHIR yang dibuat HARI INI
+            //    Menggunakan LIKE dengan 'after' agar hanya mencari yang diawali prefix tersebut
+            $this->db->select('no_transaksi');
+            $this->db->like('no_transaksi', $prefix, 'after');
+            $this->db->order_by('no_transaksi', 'DESC'); // Urutkan dari yang terbesar
+            $this->db->limit(1);
+            $query = $this->db->get('transaksi_header');
+            
+            // 3. Tentukan nomor urut berikutnya
+            if ($query->num_rows() > 0) {
+                // Jika sudah ada transaksi hari ini, ambil 3 digit terakhir dan tambah 1
+                $row = $query->row();
+                $last_number = (int) substr($row->no_transaksi, -3); // Ambil 3 digit terakhir
+                $next_number = str_pad($last_number + 1, 3, '0', STR_PAD_LEFT);
+            } else {
+                // Jika belum ada transaksi hari ini, mulai dari 001
+                $next_number = '001';
+            }
+            
+            // 4. Gabungkan prefix + nomor urut
+            return $prefix . $next_number;
         }
-        return $prefix . $date . str_pad($num, 4, '0', STR_PAD_LEFT);
-    }
 
         public function insert() {
-                 $header = [
-                'no_transaksi'  => $this->input->post('no_transaksi'),
+            // 1. Ambil no_transaksi dari form
+            $no_transaksi = $this->input->post('no_transaksi');
+            
+            // ✅ CEK DUPLIKASI (Mencegah error jika user double-click)
+            $cek = $this->db->where('no_transaksi', $no_transaksi)->get('transaksi_header')->num_rows();
+            if ($cek > 0) {
+                // Jika nomor sudah ada di database, paksa generate nomor baru yang unik
+                $no_transaksi = $this->generate_no();
+            }
+
+            // 2. Amankan pelanggan_id (dari session jika user terikat unit)
+            $pelanggan_id = $this->input->post('pelanggan_id');
+            $session_pelanggan = $this->session->userdata('pelanggan_id');
+            if (!empty($session_pelanggan)) {
+                $pelanggan_id = $session_pelanggan; 
+            }
+
+            // 3. Siapkan data header
+            $header = [
+                'no_transaksi'  => $no_transaksi, // Gunakan nomor yang sudah dicek
                 'tanggal'       => $this->input->post('tanggal'),
                 'nama_pengirim' => $this->input->post('nama_pengirim'),
                 'nama_penerima' => $this->input->post('nama_penerima'),
-                'pelanggan_id'  => $this->input->post('pelanggan_id'),
+                'pelanggan_id'  => $pelanggan_id,
                 'user_id'       => $this->session->userdata('user_id'),
                 'shift'         => $this->input->post('shift'),
-                'jenis_laundry' => $this->input->post('jenis_laundry') ?: 'Non Infeksius' // ✅ TAMBAHAN
+                'jenis_laundry' => $this->input->post('jenis_laundry') ?: 'Non Infeksius'
             ];
             
+            // 4. Insert ke database
             $this->db->insert('transaksi_header', $header);
-            $transaksi_id = $this->db->insert_id(); // 🔑 Ambil ID header yang baru
+            $transaksi_id = $this->db->insert_id();
 
+            // 5. Insert detail linen (kode lama Anda tetap di bawah ini)
             $pakaian_ids = $this->input->post('pakaian_id');
+            $jumlahs     = $this->input->post('jumlah');
+            $jumlah_kgs  = $this->input->post('jumlah_kg');
             $ceklis      = $this->input->post('ceklis');
-            $jumlah      = $this->input->post('jumlah');
-            $jumlah_kg     = $this->input->post('jumlah_kg'); // ✅ TAMBAHAN
-            $keterangan  = $this->input->post('keterangan');
+            $keterangans = $this->input->post('keterangan');
 
-            if (!empty($pakaian_ids) && is_array($pakaian_ids)) {
-                foreach ($pakaian_ids as $key => $pakaian_id) {
-                    if (empty($pakaian_id)) continue;
-                    
-                    $this->db->insert('transaksi_detail', [
-                        'transaksi_id' => $transaksi_id,
-                        'pakaian_id'   => $pakaian_id,
-                        'ceklis'       => isset($ceklis[$key]) ? (int)$ceklis[$key] : 0,
-                        'jumlah'       => isset($jumlah[$key]) ? (int)$jumlah[$key] : 0,
-                        'jumlah_kg'    => isset($jumlah_kg[$key]) ? (float)$jumlah_kg[$key] : 0.00, // ✅ SIMPAN KG
-                        'keterangan'   => isset($keterangan[$key]) ? $keterangan[$key] : ''
-                    ]);
+            if (!empty($pakaian_ids)) {
+                foreach ($pakaian_ids as $key => $val) {
+                    $detail = [
+                        'transaksi_id'       => $transaksi_id,
+                        'pakaian_id'         => $val,
+                        'jumlah'             => isset($jumlahs[$key]) ? (int)$jumlahs[$key] : 0,
+                        'jumlah_kg'          => isset($jumlah_kgs[$key]) ? (float)$jumlah_kgs[$key] : 0,
+                        'jumlah_diserahkan'  => 0,
+                        'ceklis'             => isset($ceklis[$key]) ? 1 : 0,
+                        'keterangan'         => isset($keterangans[$key]) ? $keterangans[$key] : ''
+                    ];
+                    $this->db->insert('transaksi_detail', $detail);
                 }
             }
-            
-            return $transaksi_id; // 🔑 Kembalikan ID agar controller bisa redirect
-    }
+
+            return $transaksi_id;
+        }
 
     public function delete($id) {
         $this->db->where('id', $id)->delete('transaksi_detail');
