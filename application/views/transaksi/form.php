@@ -52,24 +52,27 @@
                         <div class="col-md-3">
                             <div class="mb-3">
                                 <label class="form-label">Unit / Ruangan <span class="text-danger">*</span></label>
-    
+                                
                                 <?php if (!empty($user_pelanggan_id)): ?>
-                                    <!-- ✅ KONDISI 1: User terikat unit (Kasir/Operator Unit) -->
+                                    <!-- ✅ KONDISI 1: User terikat unit (Kasir/Operator) -->
                                     <!-- Tampilkan nama unit sebagai teks biasa agar tidak bisa diganti -->
                                     <input type="text" class="form-control bg-light" value="<?= $user_pelanggan_nama ?>" readonly>
                                     
-                                    <!-- Kirim ID unit secara tersembunyi (Hidden) agar tersimpan di database -->
+                                    <!-- Kirim ID unit secara tersembunyi -->
                                     <input type="hidden" name="pelanggan_id" value="<?= $user_pelanggan_id ?>">
                                     <small class="text-muted"><i class="fas fa-lock me-1"></i>Unit terkunci otomatis sesuai akun login Anda.</small>
                                     
                                 <?php else: ?>
-                                    <!-- ✅ KONDISI 2: User Admin (Tidak terikat unit) -->
-                                    <!-- Tampilkan dropdown penuh untuk memilih unit mana saja -->
+                                    <!-- ✅ KONDISI 2: Admin (Bebas memilih unit) -->
                                     <select name="pelanggan_id" class="form-select" required>
                                         <option value="">-- Pilih Unit / Ruangan --</option>
                                         <?php if (!empty($pelanggan)): ?>
                                             <?php foreach ($pelanggan as $p): ?>
-                                                <option value="<?= $p->id ?>"><?= $p->nama ?></option>
+                                                <!-- ✅ PRE-SELECT: Otomatis pilih unit yang sesuai dengan transaksi yang sedang diedit -->
+                                                <option value="<?= $p->id ?>" 
+                                                    <?= (isset($header) && $header->pelanggan_id == $p->id) ? 'selected' : '' ?>>
+                                                    <?= $p->nama ?>
+                                                </option>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
@@ -105,10 +108,16 @@
                                 </select>
                                 <small class="text-muted">Pilih kategori risiko linen</small>
                             </div>
+                            <!-- ✅ TAMBAHKAN KODE PENCARIAN LINEN DI SINI -->
+                            <!-- ✅ GANTI TEKS "Cari Nama Linen" DENGAN INPUT INI -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold"><i class="fas fa-search me-1"></i> Cari Nama Linen</label>
+                                <input type="text" id="searchLinen" class="form-control" placeholder="Ketik nama linen ">
+                                <small class="text-muted" id="infoLinen">Menampilkan semua linen</small>
+                            </div>
                         </div>
                     </div>
-                   
-            </div>
+                </div>
 
             <!-- Bagian Detail Barang -->
             <div class="card mt-3">
@@ -117,7 +126,7 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-striped mb-0">
+                        <table class="table table-striped mb-0" id="tabelLinen">
                             <thead class="table-dark">
                                 <tr>
                                     <th width="60" class="text-center">No</th>
@@ -130,46 +139,51 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $i = 0; foreach ($pakaian as $p): ?>
-                                    <?php 
-                                        //  Logic Pre-fill untuk Mode Edit
-                                        $checked = false; $jumlah_val = 0; $kg_val = 0.00; $ket_val = '';
-                                        if (isset($detail) && !empty($detail)) {
-                                            foreach ($detail as $d) {
-                                                if ($d->pakaian_id == $p->id) {
-                                                    $checked  = ($d->ceklis == 1);
-                                                    $jumlah_val = $d->jumlah;
-                                                    $kg_val   = isset($d->jumlah_kg) ? $d->jumlah_kg : 0.00;
-                                                    $ket_val  = $d->keterangan;
-                                                    break;
-                                                }
-                                            }
+                                <?php foreach ($pakaian as $key => $p): ?>
+    
+                                <?php 
+                                // 1. Inisialisasi default
+                                $checked    = false;
+                                $jumlah_val = 0;
+                                $kg_val     = 0.00;
+                                $ket_val    = '';
+
+                                // 2. ✅ COCOKKAN BERDASARKAN pakaian_id (BUKAN index $key)
+                                if (isset($detail) && is_array($detail)) {
+                                    foreach ($detail as $d) {
+                                        if ($d->pakaian_id == $p->id) {
+                                            // ✅ Hanya centang jika ceklIS == 1 DAN jumlah > 0
+                                            $checked    = ($d->ceklis == 1 && $d->jumlah > 0);
+                                            $jumlah_val = $d->jumlah;
+                                            $kg_val     = isset($d->jumlah_kg) ? $d->jumlah_kg : 0.00;
+                                            $ket_val    = $d->keterangan;
+                                            break;
                                         }
-                                    ?>
-                                    <tr>
-                                        <td class="text-center"><?= $i + 1 ?></td>
-                                        <td class="text-left"><strong><?= $p->nama_pakaian ?></strong></td>
-                                        <td class="text-center"><span class="badge bg-info"><?= $p->kategori ?></span></td>
-                                        
-                                        <td class="text-center">
-                                            <div class="form-check d-flex justify-content-center">
-                                                <input type="hidden" name="ceklis[<?= $i ?>]" value="0">
-                                                <input type="checkbox" name="ceklis[<?= $i ?>]" value="1" class="form-check-input" <?= $checked ? 'checked' : '' ?> style="width: 22px; height: 22px;">
-                                            </div>
-                                        </td>
-                                        <td class="text-center">
-                                            <input type="number" name="jumlah[<?= $i ?>]" class="form-control form-control-sm text-center" value="<?= $jumlah_val ?>" min="0" style="max-width: 80px;">
-                                        </td>
-                                        <td class="text-center">
-                                            <!-- ✅ INPUT BERAT KG (step 0.01 untuk desimal) -->
-                                            <input type="number" step="0.01" name="jumlah_kg[<?= $i ?>]" class="form-control form-control-sm text-center" value="<?= $kg_val ?>" min="0" style="max-width: 100px;">
-                                        </td>
-                                        <td>
-                                            <input type="hidden" name="pakaian_id[<?= $i ?>]" value="<?= $p->id ?>">
-                                            <input type="text" name="keterangan[<?= $i ?>]" class="form-control form-control-sm" placeholder="Keterangan..." value="<?= $ket_val ?>">
-                                        </td>
-                                    </tr>
-                                <?php $i++; endforeach; ?>
+                                    }
+                                }
+                                ?>
+
+                                <tr>
+                                    <td class="text-center"><?= $key + 1 ?></td>
+                                    <td class="text-left"><?= $p->nama_pakaian ?></td>
+                                    <td><?= $p->kategori ?></td>
+                                    <td class="text-center">
+                                        <input type="checkbox" name="ceklis[<?= $key ?>]" value="1" <?= $checked ? 'checked' : '' ?>>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" name="pakaian_id[<?= $key ?>]" value="<?= $p->id ?>">
+                                        <input type="number" name="jumlah[<?= $key ?>]" class="form-control form-control-sm" value="<?= $jumlah_val ?>">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="jumlah_kg[<?= $key ?>]" class="form-control form-control-sm" step="0.01" value="<?= $kg_val ?>">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="keterangan[<?= $key ?>]" class="form-control form-control-sm" value="<?= $ket_val ?>">
+                                    </td>
+                                </tr>
+
+                            <?php endforeach; ?>
+                                <!-- <?php $i++; ?> -->
                                 <!-- <?php 
                                 $i = 0; 
                                 if (!empty($pakaian)):
@@ -187,8 +201,89 @@
                                     </td>
                                 </tr>
                                 <?php endif; ?> -->
+                                <script>
+                                (function() {
+                                    var searchInput = document.getElementById('searchLinen');
+                                    var tableRows = document.querySelectorAll('#tabelLinen tbody tr');
+                                    var infoText = document.getElementById('infoLinen');
+
+                                    if (searchInput && tableRows.length > 0 && infoText) {
+                                        searchInput.addEventListener('keyup', function() {
+                                            var filter = this.value.toLowerCase().trim();
+                                            var visibleCount = 0;
+
+                                            tableRows.forEach(function(row) {
+                                                var cell = row.cells[1]; // Kolom ke-2 = Nama Linen
+                                                if (cell) {
+                                                    var namaLinen = cell.textContent.toLowerCase().trim();
+                                                    if (namaLinen.includes(filter)) {
+                                                        row.style.display = '';
+                                                        visibleCount++;
+                                                    } else {
+                                                        row.style.display = 'none';
+                                                    }
+                                                }
+                                            });
+
+                                            if (filter === '') {
+                                                infoText.textContent = 'Menampilkan semua linen';
+                                                infoText.className = 'text-muted';
+                                            } else {
+                                                infoText.textContent = 'Ditemukan ' + visibleCount + ' linen yang cocok';
+                                                infoText.className = visibleCount > 0 ? 'text-success fw-bold' : 'text-danger fw-bold';
+                                            }
+                                        });
+                                    }
+                                })();
+                                </script>
                             </tbody>
                         </table>
+                            <!-- ✅ LETAKKAN SCRIPT PENCARIAN DI SINI (Tepat setelah tabel ditutup) -->
+                            <script>
+                            (function() {
+                                var searchInput = document.getElementById('searchLinen');
+                                var tableRows = document.querySelectorAll('#tabelLinen tbody tr');
+                                var infoText = document.getElementById('infoLinen');
+
+                                // Cek apakah elemen ada sebelum menjalankan script
+                                if (searchInput && tableRows.length > 0 && infoText) {
+                                    searchInput.addEventListener('keyup', function() {
+                                        var filter = this.value.toLowerCase().trim();
+                                        var visibleCount = 0;
+
+                                        tableRows.forEach(function(row) {
+                                            // Ambil teks dari kolom ke-2 (Nama Linen) -> Index 1
+                                            var cell = row.cells[1];
+                                            if (cell) {
+                                                var namaLinen = cell.textContent.toLowerCase().trim();
+                                                
+                                                if (namaLinen.includes(filter)) {
+                                                    row.style.display = ''; // Tampilkan baris
+                                                    visibleCount++;
+                                                } else {
+                                                    row.style.display = 'none'; // Sembunyikan baris
+                                                }
+                                            }
+                                        });
+
+                                        // Update teks informasi
+                                        if (filter === '') {
+                                            infoText.textContent = 'Menampilkan semua linen';
+                                            infoText.className = 'text-muted';
+                                        } else {
+                                            infoText.textContent = 'Ditemukan ' + visibleCount + ' linen yang cocok';
+                                            infoText.className = visibleCount > 0 ? 'text-success fw-bold' : 'text-danger fw-bold';
+                                        }
+                                    });
+                                } else {
+                                    console.log('⚠️ Elemen pencarian tidak ditemukan. Pastikan ID searchLinen, tabelLinen, dan infoLinen benar.');
+                                }
+                            })();
+                            </script>
+
+        <!-- Tombol Simpan & Kembali (Biarkan tetap di sini) -->
+        <div class="mt-3 d-flex gap-2">
+            ...
                     </div>
                 </div>
             </div>

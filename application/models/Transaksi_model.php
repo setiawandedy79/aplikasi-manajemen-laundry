@@ -180,7 +180,6 @@ class Transaksi_model extends CI_Model {
                     $this->db->insert('transaksi_detail', $detail);
                 }
             }
-
             return $transaksi_id;
         }
 
@@ -198,28 +197,36 @@ class Transaksi_model extends CI_Model {
             'nama_penerima' => $this->input->post('nama_penerima'),
             'pelanggan_id'  => $this->input->post('pelanggan_id'),
             'shift'         => $this->input->post('shift'),
-            'jenis_laundry' => $this->input->post('jenis_laundry') ?: 'Non Infeksius' // ✅ TAMBAHAN
+            'jenis_laundry' => $this->input->post('jenis_laundry') ?: 'Non Infeksius'
         ];
         $this->db->where('id', $id)->update('transaksi_header', $header);
-        
+
         // 2. Hapus detail lama & insert yang baru
         $this->db->where('transaksi_id', $id)->delete('transaksi_detail');
         
         $pakaian_ids = $this->input->post('pakaian_id');
-        $ceklis      = $this->input->post('ceklis');
+        $ceklis      = $this->input->post('ceklis'); // Akan menjadi array dengan key eksplisit jika View sudah diperbaiki
         $jumlah      = $this->input->post('jumlah');
-        $jumlah_kg     = $this->input->post('jumlah_kg'); // ✅ TAMBAHAN
+        $jumlah_kg   = $this->input->post('jumlah_kg');
         $keterangan  = $this->input->post('keterangan');
-        
+
         if (!empty($pakaian_ids) && is_array($pakaian_ids)) {
             foreach ($pakaian_ids as $key => $pakaian_id) {
                 if (empty($pakaian_id)) continue;
+                
+                // ✅ LOGIKA CEKLIS YANG LEBIH AMAN
+                // Cek apakah key ini ada di array $ceklis DAN nilainya benar-benar 1
+                $is_checked = 0;
+                if (is_array($ceklis) && isset($ceklis[$key]) && $ceklis[$key] == 1) {
+                    $is_checked = 1;
+                }
+
                 $this->db->insert('transaksi_detail', [
                     'transaksi_id' => $id,
                     'pakaian_id'   => $pakaian_id,
-                    'ceklis'       => isset($ceklis[$key]) ? (int)$ceklis[$key] : 0,
+                    'ceklis'       => $is_checked, // Simpan 1 atau 0 dengan pasti
                     'jumlah'       => isset($jumlah[$key]) ? (int)$jumlah[$key] : 0,
-                    'jumlah_kg'    => isset($jumlah_kg[$key]) ? (float)$jumlah_kg[$key] : 0.00, // ✅ UPDATE KG
+                    'jumlah_kg'    => isset($jumlah_kg[$key]) ? (float)$jumlah_kg[$key] : 0.00,
                     'keterangan'   => isset($keterangan[$key]) ? $keterangan[$key] : ''
                 ]);
             }

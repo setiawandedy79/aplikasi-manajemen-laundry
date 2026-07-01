@@ -77,10 +77,11 @@ class Transaksi extends MY_Controller {
 
     public function edit($id) {
         // Cek hak akses edit
-            if (!can_edit('transaksi')) {
-                $this->session->set_flashdata('error', 'Anda tidak memiliki hak akses untuk mengedit data');
-                redirect('transaksi');
-            }
+        if (!can_edit('transaksi')) {
+            $this->session->set_flashdata('error', 'Anda tidak memiliki hak akses untuk mengedit data');
+            redirect('transaksi');
+        }
+        
         $data['title'] = 'Edit Transaksi';
         $data['header'] = $this->Transaksi_model->get_header_by_id($id);
         if (!$data['header']) {
@@ -94,10 +95,22 @@ class Transaksi extends MY_Controller {
         $data['no_transaksi'] = $data['header']->no_transaksi;
         $data['is_edit'] = true;
         $data['transaksi_id'] = $id;
+
+        // ✅ TAMBAHKAN LOGIC UNIT USER INI (Sama seperti di method add)
+        $user_pelanggan_id = $this->session->userdata('pelanggan_id');
+        $data['user_pelanggan_id'] = $user_pelanggan_id;
+        $data['user_pelanggan_nama'] = '';
         
+        if (!empty($user_pelanggan_id)) {
+            $unit = $this->db->where('id', $user_pelanggan_id)->get('pelanggan')->row();
+            if ($unit) {
+                $data['user_pelanggan_nama'] = $unit->nama;
+            }
+        }
+
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar');
-        $this->load->view('transaksi/form', $data); // Reuse form yang sama
+        $this->load->view('transaksi/form', $data); 
         $this->load->view('templates/footer');
     }
 

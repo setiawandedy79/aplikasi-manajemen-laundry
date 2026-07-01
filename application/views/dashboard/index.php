@@ -49,6 +49,12 @@
                             <i class="fas fa-plus me-1"></i> Transaksi Penyerahan
                         </a>
                     </div>
+
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px;">
+                        <a href="<?= base_url('auth/logout') ?>">
+                            <i class="fas fa-sign-out-alt"></i> Keluar
+                        </a>
+                    </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
