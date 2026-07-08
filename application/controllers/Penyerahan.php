@@ -92,6 +92,8 @@ class Penyerahan extends MY_Controller {
         }
         
         $data['detail'] = $this->Transaksi_model->get_detail_for_penyerahan($id);
+        // ✅ TAMBAHKAN BARIS INI: Ambil klaim dari transaksi sebelumnya (hanya yang belum_terkirim)
+        $data['pending_klaim'] = $this->Transaksi_model->get_pending_klaim($data['header']->pelanggan_id);
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar');
         $this->load->view('penyerahan/form', $data);
@@ -99,27 +101,70 @@ class Penyerahan extends MY_Controller {
     }
 
     public function save() {
+        // ==========================================
+        // 1. SIMPAN DATA TRANSAKSI SAAT INI
+        // ==========================================
         $id = $this->input->post('transaksi_id');
         $nama_pengambil = $this->input->post('nama_pengambil');
         
         $detail_ids        = $this->input->post('detail_id');
         $jumlah_diserahkan = $this->input->post('jumlah_diserahkan');
         $keterangans       = $this->input->post('keterangan');
-
-        $detail_data = [];
         
+        // ✅ AMBIL DATA STATUS KEKURANGAN DARI POST
+        $status_kekurangans       = $this->input->post('status_kekurangan');
+        $keterangan_kekurangans   = $this->input->post('keterangan_kekurangan');
+        
+        $detail_data = [];
         if (!empty($detail_ids) && is_array($detail_ids)) {
             foreach ($detail_ids as $key => $did) {
-                $detail_data[] = [
+                $jumlah = isset($jumlah_diserahkan[$key]) ? (int)$jumlah_diserahkan[$key] : 0;
+                
+                $item = [
                     'detail_id'  => $did,
-                    'jumlah'     => isset($jumlah_diserahkan[$key]) ? (int)$jumlah_diserahkan[$key] : 0, // ⚠️ Koma di sini WAJIB ada!
+                    'jumlah'     => $jumlah,
                     'keterangan' => isset($keterangans[$key]) ? $keterangans[$key] : ''
                 ];
+                
+                // ✅ TAMBAHKAN: Kirim status kekurangan jika ada
+                if (isset($status_kekurangans[$did]) && !empty($status_kekurangans[$did])) {
+                    $item['status_kekurangan'] = $status_kekurangans[$did];
+                    $item['keterangan_kekurangan'] = isset($keterangan_kekurangans[$did]) ? $keterangan_kekurangans[$did] : '';
+                }
+                
+                $detail_data[] = $item;
+            }
+        }
+        
+        // Update header & detail transaksi yang sedang dikerjakan
+        $this->Transaksi_model->update_penyerahan($id, $nama_pengambil, $detail_data);
+
+        // ==========================================
+        // 2. PROSES KLAIM (Update Transaksi Lama)
+        // ==========================================
+        $klaim_ids = $this->input->post('klaim_id');
+        if (!empty($klaim_ids)) {
+            $klaim_jumlahs = $this->input->post('klaim_jumlah');
+            foreach ($klaim_ids as $detail_id) {
+                $jumlah_klaim = isset($klaim_jumlahs[$detail_id]) ? (int)$klaim_jumlahs[$detail_id] : 0;
+                if ($jumlah_klaim > 0) {
+                    $old_detail = $this->db->where('id', $detail_id)->get('transaksi_detail')->row();
+                    if ($old_detail) {
+                        $total_diserahkan_baru = (int)$old_detail->jumlah_diserahkan + $jumlah_klaim;
+                        $status_final = ($total_diserahkan_baru >= (int)$old_detail->jumlah) ? 'lunas' : 'belum_terkirim';
+                        $this->db->where('id', $detail_id)->update('transaksi_detail', [
+                            'jumlah_diserahkan' => $total_diserahkan_baru,
+                            'status_kekurangan' => $status_final
+                        ]);
+                    }
+                }
             }
         }
 
-        $this->Transaksi_model->update_penyerahan($id, $nama_pengambil, $detail_data);
-        $this->session->set_flashdata('success', 'Data penyerahan berhasil disimpan');
+        // ==========================================
+        // 3. SELESAI
+        // ==========================================
+        $this->session->set_flashdata('success', 'Data penyerahan dan pelunasan klaim berhasil disimpan');
         redirect('penyerahan');
     }
 

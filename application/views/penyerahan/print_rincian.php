@@ -65,7 +65,7 @@
                 <th width="80">Jml Awal</th>
                 <th width="100">Jml Diserahkan</th>
                 <th width="80">Sisa</th>
-                <th class="text-center">Keterangan</th>
+                <th class="text-center">Keterangan / Status Kekurangan</th>
             </tr>
         </thead>
         <tbody>
@@ -94,7 +94,32 @@
                 <td><?= $qty_awal ?></td>
                 <td><?= $qty_serah ?></td>
                 <td><?= $sisa > 0 ? $sisa : '0' ?></td>
-                <td class="text-start"><?= isset($d->keterangan) ? $d->keterangan : '-' ?></td>
+                <?php 
+                    // ✅ LOGIKA KHUSUS UNTUK PRINT (Tanpa Bootstrap)
+                    $keterangan_tampil = '-';
+                    
+                    if ($sisa > 0) {
+                        $status_text = '';
+                        if (isset($d->status_kekurangan) && $d->status_kekurangan == 'rusak') {
+                            $status_text = '🔥 RUSAK';
+                        } elseif (isset($d->status_kekurangan) && $d->status_kekurangan == 'belum_terkirim') {
+                            $status_text = '📦 BELUM TERKIRIM';
+                        } else {
+                            $status_text = 'KEKURANGAN';
+                        }
+                        
+                        $ket_kurang = isset($d->keterangan_kekurangan) && !empty($d->keterangan_kekurangan) ? $d->keterangan_kekurangan : '';
+                        $keterangan_tampil = '<strong>' . $status_text . '</strong>' . ($ket_kurang ? '<br><em>' . $ket_kurang . '</em>' : '');
+                    } else {
+                        if (isset($d->keterangan) && !empty($d->keterangan)) {
+                            $keterangan_tampil = $d->keterangan;
+                        }
+                    }
+                ?>
+
+                <!-- ✅ GANTI TD INI -->
+                <td><?= $keterangan_tampil ?></td>
+                <!-- <td class="text-start"><?= isset($d->keterangan) ? $d->keterangan : '-' ?></td> -->
             </tr>
             <?php 
                     endif; // Tutup if qty_serah > 0

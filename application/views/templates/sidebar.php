@@ -151,6 +151,11 @@
         </a>
         <?php endif; ?> -->
 
+        <!-- ✅ MENU BARU: REKAPITULASI PENCUCIAN PCS -->    
+        <!-- <a href="<?= base_url('laporan/rekapitulasi_pencucian_pcs') ?>" class="<?= $this->uri->segment(2) == 'rekapitulasi_pencucian_pcs' ? 'active' : '' ?>">
+        <i class="fas fa-tshirt me-2"></i> Rekap Pencucian (Pcs)
+        </a> -->
+
         <!-- ✅ MENU BARU: Log Activity -->
         <?php if ($this->session->userdata('role') === 'admin'): ?>
         <div class="nav-section mt-3">Administrasi</div>

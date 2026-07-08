@@ -40,7 +40,7 @@
                                 <th width="120">Jumlah Awal</th>
                                 <th width="150">Jumlah Diserahkan</th>
                                 <th width="130">Sisa / Belum Diambil</th>
-                                <th>Keterangan</th>
+                                <th>Keterangan / Status Kekurangan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,7 +75,34 @@
                                         <span class="badge bg-success">0</span>
                                     <?php endif; ?>
                                 </td>
-                                <td class="text-start small text-muted"><?= isset($d->keterangan) ? $d->keterangan : '-' ?></td>
+                                <?php 
+                                    // ✅ LOGIKA BARU UNTUK MENAMPILKAN KETERANGAN KEKURANGAN
+                                    $keterangan_tampil = '-';
+                                    
+                                    if ($sisa > 0) {
+                                        // Jika ada sisa/kekurangan, tampilkan status dan keterangan kekurangan
+                                        $status_badge = '';
+                                        if (isset($d->status_kekurangan) && $d->status_kekurangan == 'rusak') {
+                                            $status_badge = '<span class="badge bg-danger">🔥 Rusak</span>';
+                                        } elseif (isset($d->status_kekurangan) && $d->status_kekurangan == 'belum_terkirim') {
+                                            $status_badge = '<span class="badge bg-warning text-dark">📦 Belum Terkirim</span>';
+                                        } else {
+                                            $status_badge = '<span class="badge bg-secondary">Kurang</span>';
+                                        }
+                                        
+                                        $ket_kurang = isset($d->keterangan_kekurangan) && !empty($d->keterangan_kekurangan) ? $d->keterangan_kekurangan : '';
+                                        $keterangan_tampil = $status_badge . ($ket_kurang ? '<br><small class="text-muted">' . $ket_kurang . '</small>' : '');
+                                    } else {
+                                        // Jika tidak ada sisa (lunas), tampilkan keterangan biasa jika ada
+                                        if (isset($d->keterangan) && !empty($d->keterangan)) {
+                                            $keterangan_tampil = $d->keterangan;
+                                        }
+                                    }
+                                ?>
+
+                                <!-- ✅ GANTI TD INI -->
+                                <td><?= $keterangan_tampil ?></td>
+                                <!-- <td class="text-start small text-muted"><?= isset($d->keterangan) ? $d->keterangan : '-' ?></td> -->
                             </tr>
                             <?php 
                                     endif; // Tutup if qty_serah > 0

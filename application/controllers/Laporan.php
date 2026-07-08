@@ -505,4 +505,60 @@ class Laporan extends MY_Controller {
         
         $this->load->view('laporan/print_kartu_stok', $data);
     }
+    public function rekapitulasi_pencucian_pcs() {
+        $data['title'] = 'Rekapitulasi Pencucian Linen (Pcs)';
+        $tahun = $this->input->get('tahun') ?: date('Y');
+        $data['tahun'] = $tahun;
+        
+        // 1. Ambil semua daftar unit
+        $data['units'] = $this->db->get('pelanggan')->result();
+        
+        // 2. Ambil data transaksi yang sudah dicentang (ceklis = 1)
+        $this->db->select('
+            transaksi_header.pelanggan_id,
+            MONTH(transaksi_header.tanggal) as bulan,
+            SUM(transaksi_detail.jumlah) as total_pcs
+        ');
+        $this->db->from('transaksi_detail');
+        $this->db->join('transaksi_header', 'transaksi_header.id = transaksi_detail.transaksi_id');
+        $this->db->where('YEAR(transaksi_header.tanggal)', $tahun);
+        $this->db->where('transaksi_detail.ceklis', 1); // Hanya hitung linen yang dipilih/dicuci
+        $this->db->group_by('transaksi_header.pelanggan_id, MONTH(transaksi_header.tanggal)');
+        $query = $this->db->get();
+        
+        // 3. Format data agar mudah dipanggil di view: $data_pcs[unit_id][bulan] = total
+        $data_pcs = [];
+        foreach ($query->result() as $row) {
+            $data_pcs[$row->pelanggan_id][$row->bulan] = $row->total_pcs;
+        }
+        $data['data_pcs'] = $data_pcs;
+        
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar');
+        $this->load->view('laporan/rekapitulasi_pencucian_pcs', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function print_rekapitulasi_pencucian_pcs() {
+        $tahun = $this->input->get('tahun') ?: date('Y');
+        $data['tahun'] = $tahun;
+        
+        $data['units'] = $this->db->get('pelanggan')->result();
+        
+        $this->db->select('transaksi_header.pelanggan_id, MONTH(transaksi_header.tanggal) as bulan, SUM(transaksi_detail.jumlah) as total_pcs');
+        $this->db->from('transaksi_detail');
+        $this->db->join('transaksi_header', 'transaksi_header.id = transaksi_detail.transaksi_id');
+        $this->db->where('YEAR(transaksi_header.tanggal)', $tahun);
+        $this->db->where('transaksi_detail.ceklis', 1);
+        $this->db->group_by('transaksi_header.pelanggan_id, MONTH(transaksi_header.tanggal)');
+        $query = $this->db->get();
+        
+        $data_pcs = [];
+        foreach ($query->result() as $row) {
+            $data_pcs[$row->pelanggan_id][$row->bulan] = $row->total_pcs;
+        }
+        $data['data_pcs'] = $data_pcs;
+        
+        $this->load->view('laporan/print_rekapitulasi_pencucian_pcs', $data);
+    }
 }

@@ -76,7 +76,7 @@
                             ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td class="text-left fw-semibold"><?= isset($unit->nama) ? strtoupper($unit->nama) : '-' ?></td>
+                                <td class="text-left fw-bold"><?= isset($unit->nama) ? strtoupper($unit->nama) : '-' ?></td>
                                 <?php for($b=1; $b<=12; $b++): 
                                     $val = isset($data_berat[$uid][$b]) ? $data_berat[$uid][$b] : 0;
                                 ?>

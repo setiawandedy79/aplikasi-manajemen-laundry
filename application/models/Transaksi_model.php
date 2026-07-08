@@ -316,6 +316,8 @@ class Transaksi_model extends CI_Model {
             transaksi_detail.jumlah,
             transaksi_detail.jumlah_diserahkan,
             transaksi_detail.keterangan,
+            transaksi_detail.status_kekurangan,       
+            transaksi_detail.keterangan_kekurangan,   
             pakaian.nama_pakaian,
             pakaian.kategori
         ');
@@ -327,20 +329,65 @@ class Transaksi_model extends CI_Model {
 
     public function update_penyerahan($id, $nama_pengambil, $detail_data) {
         // Update Header
-            $this->db->where('id', $id)->update('transaksi_header', [
-                'nama_pengambil' => $nama_pengambil,
-                'status_serah'   => 'diserahkan'
-            ]);
+        $this->db->where('id', $id)->update('transaksi_header', [
+            'nama_pengambil' => $nama_pengambil,
+            'status_serah'   => 'diserahkan'
+        ]);
 
-            // Update Detail
-            if (!empty($detail_data) && is_array($detail_data)) {
-                foreach ($detail_data as $item) {
-                    $this->db->where('id', $item['detail_id'])->update('transaksi_detail', [
-                        'jumlah_diserahkan' => (int)$item['jumlah'], // ⚠️ Koma di sini WAJIB ada!
-                        'keterangan'        => $item['keterangan']
-                    ]);
+        // Update Detail
+        if (!empty($detail_data) && is_array($detail_data)) {
+            foreach ($detail_data as $item) {
+                $update = [
+                    'jumlah_diserahkan' => (int)$item['jumlah'],
+                    'keterangan'        => isset($item['keterangan']) ? $item['keterangan'] : ''
+                ];
+                
+                // ✅ TAMBAHKAN: Simpan status kekurangan jika ada
+                if (isset($item['status_kekurangan']) && !empty($item['status_kekurangan'])) {
+                    $update['status_kekurangan'] = $item['status_kekurangan'];
+                    $update['keterangan_kekurangan'] = isset($item['keterangan_kekurangan']) ? $item['keterangan_kekurangan'] : '';
+                } else {
+                    // Jika tidak ada kekurangan, set ke 'lunas'
+                    $update['status_kekurangan'] = 'lunas';
+                    $update['keterangan_kekurangan'] = null;
                 }
+                
+                $this->db->where('id', $item['detail_id'])->update('transaksi_detail', $update);
             }
-            return true;
+        }
+        return true;
+    }
+    /**
+     * Get item yang belum dikembalikan penuh dari transaksi sebelumnya
+     */
+    /**
+     * Ambil linen yang belum terkirim dari transaksi sebelumnya (Hanya yang statusnya 'belum_terkirim')
+     */
+    public function get_pending_klaim($pelanggan_id) {
+        $this->db->select('
+            td.id, td.jumlah, td.jumlah_diserahkan, td.keterangan_kekurangan,
+            (td.jumlah - td.jumlah_diserahkan) as kurang,
+            th.no_transaksi, th.tanggal,
+            pakaian.nama_pakaian, pakaian.kategori
+        ');
+        $this->db->from('transaksi_detail td');
+        $this->db->join('transaksi_header th', 'th.id = td.transaksi_id');
+        $this->db->join('pakaian', 'pakaian.id = td.pakaian_id');
+        $this->db->where('th.pelanggan_id', $pelanggan_id);
+        $this->db->where('td.status_kekurangan', 'belum_terkirim'); // ✅ KUNCI UTAMA: Hanya ambil yang belum terkirim
+        $this->db->where('td.jumlah > td.jumlah_diserahkan', NULL, FALSE);
+        $this->db->order_by('th.tanggal', 'ASC');
+        return $this->db->get()->result();
+    }
+
+    /**
+     * Mark klaim as lunas
+     */
+    public function mark_klaim_lunas($detail_id, $jumlah_kembali) {
+        $this->db->where('id', $detail_id);
+        $this->db->update('transaksi_detail', [
+            'jumlah_dikembalikan' => $jumlah_kembali,
+            'status_klaim' => 'lunas'
+        ]);
     }
 }
